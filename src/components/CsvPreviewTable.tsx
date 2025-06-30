@@ -13,6 +13,7 @@ import {TableControls} from "./TableControls";
 export const CsvPreviewTable = () => {
   const csvData = useGlobalStore((s) => s.csvData);
   const headerRowIndex = useGlobalStore((s) => s.headerRowIndex);
+  const columnVisibility = useGlobalStore((s) => s.columnVisibility);
 
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -29,6 +30,9 @@ export const CsvPreviewTable = () => {
     data: tableData,
     columns: colDefs,
     getCoreRowModel: getCoreRowModel(),
+    state: {
+      columnVisibility,
+    },
   });
 
   const {rows} = table.getRowModel();

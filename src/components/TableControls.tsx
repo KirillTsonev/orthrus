@@ -4,6 +4,7 @@ import {useGlobalStore} from "../store/global/GlobalStore";
 
 export const TableControls = () => {
   const isSelectingHeaderRow = useInteractionStore((s) => s.isSelectingHeaderRow);
+  const isDeletingColumns = useInteractionStore((s) => s.isDeletingColumns);
   const headerRowIndex = useGlobalStore((s) => s.headerRowIndex);
 
   return (
@@ -19,7 +20,7 @@ export const TableControls = () => {
                 }));
               }}
             >
-              Select header row
+              Change header row
             </button>
           )}
           {isSelectingHeaderRow && <div>Click on the row you want to use as header.</div>}
@@ -29,11 +30,11 @@ export const TableControls = () => {
         onClick={() => {
           useInteractionStore.setState((s) => ({
             ...s,
-            isDeletingColumns: true,
+            isDeletingColumns: !s.isDeletingColumns,
           }));
         }}
       >
-        Delete columns?
+        {isDeletingColumns ? "Confirm deletion" : "Delete columns?"}
       </button>
       <button>Reset</button>
     </TableControlsContainer>

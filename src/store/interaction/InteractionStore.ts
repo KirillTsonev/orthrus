@@ -1,6 +1,15 @@
 import {create} from "zustand";
 
-export const useInteractionStore = create(() => ({
+interface IInteractionStore {
+  isSelectingHeaderRow: boolean;
+  isDeletingColumns: boolean;
+}
+
+const INITIAL_INTERACTION_STORE = {
   isSelectingHeaderRow: false,
   isDeletingColumns: false,
+};
+
+export const useInteractionStore = create<IInteractionStore>(() => ({
+  ...INITIAL_INTERACTION_STORE,
 }));

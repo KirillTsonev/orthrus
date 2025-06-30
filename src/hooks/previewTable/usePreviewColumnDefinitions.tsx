@@ -15,21 +15,23 @@ const capitalizeWords = (str: string) => str.replace(/\b\w/g, (char) => char.toU
 export const usePreviewColumnDefinitions = () => {
   const csvData = useGlobalStore().csvData;
   const headerKeys = Object.keys(Object.assign({}, ...csvData));
-  const columnHelper = createColumnHelper<any>();
+  const columnHelper = createColumnHelper<Record<string, string | number | null>>();
+
+  console.log("%c ", "background: pink; color: black", headerKeys);
 
   const getColumnDefinitions = useMemo(() => {
     return headerKeys.map((col) => {
       const allValues = [col, ...csvData.map((row) => row[col] ?? "")];
 
-      const maxContentWidth = allValues.reduce((max, val) => {
+      const maxContentWidth = allValues.reduce<number>((max, val) => {
         const w = getTextWidth(String(val).trim());
         return Math.max(max, w);
       }, 0);
 
-      const finalWidth = maxContentWidth + 32;
+      const finalWidth = maxContentWidth + 40;
 
       return columnHelper.accessor(col, {
-        id: col,
+        id: capitalizeWords(col),
         header: capitalizeWords(col),
         cell: (props) => (col.match(/email/gi) ? props.row.original[col] : capitalizeWords(String(props.row.original[col] ?? ""))),
         size: finalWidth,
