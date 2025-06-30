@@ -1,7 +1,21 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "jsxImportSource": "@emotion/react",
+    "baseUrl": "./src",
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "isolatedModules": true,
+    "noFallthroughCasesInSwitch": true,
+    "noErrorTruncation": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "types": [
+      "vite/client",
+      "@emotion/react/types/css-prop"
+    ],
+  },
 }

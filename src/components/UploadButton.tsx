@@ -1,68 +1,49 @@
-import {useState} from "react";
 import {useGlobalStore} from "../store/global/GlobalStore";
+import {useCSVReader} from "react-papaparse";
 
 export const UploadButton = () => {
-  const [file, setFile] = useState();
-
-  const fileReader = new FileReader();
-
-  const handleOnChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const csvFileToArray = (string: string) => {
-    const csvHeader = string.slice(0, string.indexOf("\n")).split(",");
-    const csvRows = string.slice(string.indexOf("\n") + 1).split("\n");
-
-    const array = csvRows.map((i) => {
-      const values = i.split(",");
-      const obj = csvHeader.reduce((object, header, index) => {
-        object[header] = values[index];
-        return object;
-      }, {});
-      return obj;
-    });
-
-    useGlobalStore.setState((s) => ({
-      ...s,
-      csvData: array,
-    }));
-  };
-
-  const handleOnSubmit = (e) => {
-    e.preventDefault();
-
-    if (file) {
-      fileReader.onload = function (event) {
-        const text = event.target?.result;
-        csvFileToArray(text);
-      };
-
-      fileReader.readAsText(file);
-    }
-  };
+  const {CSVReader} = useCSVReader();
 
   return (
-    <div style={{textAlign: "center"}}>
-      <h1>CSV Import</h1>
-      <form>
-        <input
-          type={"file"}
-          id={"csvFileInput"}
-          accept={".csv"}
-          onChange={handleOnChange}
-        />
+    <CSVReader
+      onUploadAccepted={(results: any) => {
+        const csvObjects = csvArrayToObjects(results.data);
 
-        <button
-          onClick={(e) => {
-            handleOnSubmit(e);
-          }}
-        >
-          IMPORT CSV
-        </button>
-      </form>
-
-      <br />
-    </div>
+        useGlobalStore.setState((s) => ({
+          ...s,
+          csvData: csvObjects,
+        }));
+      }}
+    >
+      {({getRootProps, acceptedFile}: any) => (
+        <>
+          <div>
+            <button
+              type="button"
+              {...getRootProps()}
+            >
+              Browse file
+            </button>
+            <div>{acceptedFile && acceptedFile.name}</div>
+          </div>
+        </>
+      )}
+    </CSVReader>
   );
 };
+
+function csvArrayToObjects(data: string[][], headerRowIndex = 0): Record<string, string>[] {
+  if (!data.length || data.length <= headerRowIndex) return [];
+
+  const headers = data[headerRowIndex].map((h) => h.trim());
+
+  return data.map((row) => {
+    const obj: Record<string, string> = {};
+
+    headers.forEach((header, i) => {
+      obj[header] = (row[i] ?? "").trim();
+    });
+
+    return obj;
+  });
+}
