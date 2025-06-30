@@ -10,6 +10,8 @@ const getTextWidth = (text: string, font = "14px Arial") => {
   return context.measureText(text).width;
 };
 
+const capitalizeWords = (str: string) => str.replace(/\b\w/g, (char) => char.toUpperCase());
+
 export const usePreviewColumnDefinitions = () => {
   const csvData = useGlobalStore().csvData;
   const headerKeys = Object.keys(Object.assign({}, ...csvData));
@@ -24,12 +26,12 @@ export const usePreviewColumnDefinitions = () => {
         return Math.max(max, w);
       }, 0);
 
-      const finalWidth = maxContentWidth + 16;
+      const finalWidth = maxContentWidth + 32;
 
       return columnHelper.accessor(col, {
         id: col,
-        header: col,
-        cell: (props) => props.row.original[col],
+        header: capitalizeWords(col),
+        cell: (props) => (col.match(/email/gi) ? props.row.original[col] : capitalizeWords(String(props.row.original[col] ?? ""))),
         size: finalWidth,
       });
     });

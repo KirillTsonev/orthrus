@@ -3,14 +3,35 @@ import {flexRender} from "@tanstack/react-table";
 import styled from "styled-components";
 import {useResponsiveTable} from "../hooks/previewTable/useResponsiveTable";
 import {ROW_HEIGHT} from "./CsvPreviewTable";
+import {useInteractionStore} from "../store/interaction/InteractionStore";
+import {useGlobalStore} from "../store/global/GlobalStore";
 
-interface TableRowProps {}
+interface TableRowProps {
+  row: any;
+}
 
-export const TableRow = ({row}) => {
+export const TableRow: React.FC<TableRowProps> = ({row}) => {
   const {getFlexAndWidth} = useResponsiveTable();
+  const isSelectingHeaderRow = useInteractionStore((s) => s.isSelectingHeaderRow);
 
   return (
-    <TableRowContainer>
+    <TableRowContainer
+      css={css`
+        cursor: ${isSelectingHeaderRow ? "pointer" : "default"};
+      `}
+      onClick={() => {
+        if (isSelectingHeaderRow) {
+          useInteractionStore.setState((s) => ({
+            ...s,
+            isSelectingHeaderRow: false,
+          }));
+          useGlobalStore.setState((s) => ({
+            ...s,
+            headerRowIndex: row.index,
+          }));
+        }
+      }}
+    >
       {row.getVisibleCells().map((cell) => {
         const cellSize = cell.column.getSize();
 
@@ -28,6 +49,7 @@ export const TableRow = ({row}) => {
               align-items: center;
               justify-content: center;
               height: ${ROW_HEIGHT}px;
+              font-weight: ${row.index === 0 ? "bold" : "normal"};
 
               ${getFlexAndWidth(cellSize)};
             `}
@@ -42,4 +64,5 @@ export const TableRow = ({row}) => {
 
 const TableRowContainer = styled.div`
   display: flex;
+  position: relative;
 `;

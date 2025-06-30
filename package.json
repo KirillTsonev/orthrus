@@ -14,6 +14,7 @@
     "@emotion/react": "^11.14.0",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.12",
+    "lodash-es": "^4.17.21",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-papaparse": "^4.4.0",

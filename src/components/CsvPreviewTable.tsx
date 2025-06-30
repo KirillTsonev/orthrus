@@ -1,21 +1,32 @@
 import {useGlobalStore} from "../store/global/GlobalStore";
 import {getCoreRowModel, useReactTable} from "@tanstack/react-table";
 import {useWindowVirtualizer} from "@tanstack/react-virtual";
-import {useRef} from "react";
+import {useMemo, useRef} from "react";
 import {css} from "@emotion/react";
 import {TableRow} from "./TableRow";
 import styled from "styled-components";
 import {usePreviewColumnDefinitions} from "../hooks/previewTable/usePreviewColumnDefinitions";
 import {Scrollbar} from "react-scrollbars-custom";
+import {isEmpty} from "lodash-es";
+import {TableControls} from "./TableControls";
 
 export const CsvPreviewTable = () => {
-  const csvData = useGlobalStore().csvData;
+  const csvData = useGlobalStore((s) => s.csvData);
+  const headerRowIndex = useGlobalStore((s) => s.headerRowIndex);
+
   const parentRef = useRef<HTMLDivElement>(null);
 
   const {getColumnDefinitions: colDefs} = usePreviewColumnDefinitions();
 
+  const tableData = useMemo(() => {
+    if (headerRowIndex !== undefined) {
+      return [csvData[headerRowIndex], ...csvData.slice(0, headerRowIndex), ...csvData.slice(headerRowIndex + 1)];
+    }
+    return csvData;
+  }, [csvData, headerRowIndex]);
+
   const table = useReactTable({
-    data: csvData,
+    data: tableData,
     columns: colDefs,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -29,16 +40,18 @@ export const CsvPreviewTable = () => {
     scrollMargin: parentRef.current?.offsetTop ?? 0,
   });
 
+  if (isEmpty(csvData[0])) return null;
+
   return (
     <TableContainer ref={parentRef}>
-      <button>Change header row</button>
+      <TableControls />
       <div
         css={css`
           display: flex;
           flex-direction: column;
           width: 100%;
           position: relative;
-          height: ${rowVirtualizer.getTotalSize()}px;
+          height: ${rowVirtualizer.getTotalSize() + 20}px;
           overflow: hidden;
         `}
       >
@@ -76,14 +89,11 @@ export const CsvPreviewTable = () => {
                   left: 0;
                   width: 100%;
                   height: ${virtualRow.size}px;
-                  transform: translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin}px);
+                  transform: translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin + 20}px);
                 `}
                 data-index={virtualRow.index}
               >
-                <TableRow
-                  row={row}
-                  style={{height: `${virtualRow.size}px`}}
-                />
+                <TableRow row={row} />
               </div>
             );
           })}
@@ -100,6 +110,7 @@ const TableContainer = styled.div`
   gap: 15px;
   align-self: stretch;
   border: solid 1px green;
+  position: relative;
 `;
 
 export const ROW_HEIGHT = 50;
