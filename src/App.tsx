@@ -1,5 +1,11 @@
-import "./App.css";
+import {UploadButton} from "./components/UploadButton";
+import {CsvPreviewTable} from "./components/CsvPreviewTable";
 
 export const App = () => {
-  return <></>;
+  return (
+    <>
+      <UploadButton />
+      <CsvPreviewTable />
+    </>
+  );
 };
