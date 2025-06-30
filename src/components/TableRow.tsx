@@ -42,5 +42,4 @@ export const TableRow = ({row}) => {
 
 const TableRowContainer = styled.div`
   display: flex;
-  border: solid 1px green;
 `;
