@@ -21,6 +21,7 @@ interface IGlobalStore {
   currentFilter: CURRENT_FILTER;
   orthrusCsvData: Array<Record<string, string>>;
   totalRowsNumber: number;
+  globalFieldMapping: Record<string, string>;
 }
 
 const INITIAL_GLOBAL_STORE = {
@@ -32,6 +33,7 @@ const INITIAL_GLOBAL_STORE = {
   currentFilter: CURRENT_FILTER.All,
   orthrusCsvData: [{}],
   totalRowsNumber: 0,
+  globalFieldMapping: {},
 };
 
 export const useGlobalStore = create<IGlobalStore>(() => ({...INITIAL_GLOBAL_STORE}));
