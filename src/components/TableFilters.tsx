@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {useGlobalStore} from "../store/global/GlobalStore";
+import {useGlobalStore, CURRENT_TABLE, CURRENT_FILTER} from "../store/global/GlobalStore";
 import {useValidateTable} from "../hooks/previewTable/useValidateTable";
 import {GENERIC_FIELDS_IDS} from "../config/consts";
 import {isEmpty} from "lodash-es";
@@ -17,9 +17,9 @@ const columnToFieldId: Record<string, GENERIC_FIELDS_IDS> = {
 
 export const TableFilters = () => {
   const csvData = useGlobalStore((s) => s.csvData);
+  const currentFilter = useGlobalStore((s) => s.currentFilter);
   const {validateCell, findDuplicates} = useValidateTable();
   const duplicates = findDuplicates(csvData);
-  const areThereDuplicates = !isEmpty(duplicates);
 
   const cleanData = csvData
     .slice(1)
@@ -29,59 +29,100 @@ export const TableFilters = () => {
     .filter((row) => Object.entries(columnToFieldId).some(([col, fieldId]) => !validateCell(row[col], fieldId)));
   const duplicatedData = csvData.filter((_, index) => duplicates.includes(index));
 
+  const noErrors = isEmpty(errorData);
+  const noDuplicates = isEmpty(duplicates);
+
   return (
     <FiltersContainer>
+      <div style={{display: "flex", gap: "20px", justifyContent: "center"}}>
+        {(!noDuplicates || !noErrors) && (
+          <button
+            onClick={() => {
+              useGlobalStore.setState((s) => ({
+                ...s,
+                csvDataToDisplay: s.csvData,
+                currentTable: CURRENT_TABLE.Preview,
+                currentFilter: CURRENT_FILTER.All,
+              }));
+            }}
+          >
+            All rows
+          </button>
+        )}
+        {!noErrors && (
+          <>
+            <button
+              onClick={() => {
+                useGlobalStore.setState((s) => ({
+                  ...s,
+                  csvDataToDisplay: csvData.slice(0, 1).concat(cleanData),
+                  currentTable: CURRENT_TABLE.Preview,
+                  currentFilter: CURRENT_FILTER.Clean,
+                }));
+              }}
+            >
+              Clean rows
+            </button>
+            <div style={{display: "flex", gap: "5px"}}>
+              <button
+                onClick={() => {
+                  useGlobalStore.setState((s) => ({
+                    ...s,
+                    csvDataToDisplay: csvData.slice(0, 1).concat(errorData),
+                    currentTable: CURRENT_TABLE.Preview,
+                    currentFilter: CURRENT_FILTER.Problem,
+                  }));
+                }}
+              >
+                Rows with issues
+              </button>
+              {currentFilter === CURRENT_FILTER.Problem && (
+                <button
+                  onClick={() => {
+                    const errorRows = errorData.map((data) => data.index);
+                    const filteredData = csvData.filter((data) => !errorRows.includes(data.index));
+
+                    useGlobalStore.setState((s) => ({
+                      ...s,
+                      csvData: filteredData,
+                      csvDataToDisplay: filteredData,
+                      currentTable: CURRENT_TABLE.Preview,
+                    }));
+                  }}
+                >
+                  Delete all rows with issues
+                </button>
+              )}
+            </div>
+          </>
+        )}
+        {!noDuplicates && (
+          <button
+            onClick={() => {
+              useGlobalStore.setState((s) => ({
+                ...s,
+                csvDataToDisplay: csvData.slice(0, 1).concat(duplicatedData),
+                currentTable: CURRENT_TABLE.Duplicates,
+              }));
+            }}
+          >
+            Duplicates
+          </button>
+        )}
+      </div>
       <button
-        onClick={() => {
-          useGlobalStore.setState((s) => ({
-            ...s,
-            csvDataToDisplay: s.csvData,
-            currentTable: "preview",
-          }));
-        }}
+        disabled={!noDuplicates || !noErrors}
+        style={{padding: "10px", margin: "10px 0"}}
       >
-        All rows
+        Finish CSV upload
       </button>
-      <button
-        onClick={() => {
-          useGlobalStore.setState((s) => ({
-            ...s,
-            csvDataToDisplay: csvData.slice(0, 1).concat(cleanData),
-            currentTable: "preview",
-          }));
-        }}
-      >
-        Clean rows
-      </button>
-      <button
-        onClick={() => {
-          useGlobalStore.setState((s) => ({
-            ...s,
-            csvDataToDisplay: csvData.slice(0, 1).concat(errorData),
-            currentTable: "preview",
-          }));
-        }}
-      >
-        Rows with issues
-      </button>
-      {areThereDuplicates && (
-        <button
-          onClick={() => {
-            useGlobalStore.setState((s) => ({
-              ...s,
-              csvDataToDisplay: csvData.slice(0, 1).concat(duplicatedData),
-              currentTable: "duplicates",
-            }));
-          }}
-        >
-          Duplicates
-        </button>
-      )}
     </FiltersContainer>
   );
 };
 
 const FiltersContainer = styled.div`
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px;
 `;

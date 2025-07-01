@@ -1,32 +1,24 @@
 import styled from "styled-components";
 import {useInteractionStore} from "../store/interaction/InteractionStore";
-import {useGlobalStore} from "../store/global/GlobalStore";
+import {useGlobalStore, CURRENT_TABLE} from "../store/global/GlobalStore";
 
 export const TableControls = () => {
   const isSelectingHeaderRow = useInteractionStore((s) => s.isSelectingHeaderRow);
   const isDeletingColumns = useInteractionStore((s) => s.isDeletingColumns);
-  const headerRowIndex = useGlobalStore((s) => s.headerRowIndex);
   const isMappingColumns = useInteractionStore((s) => s.isMappingColumns);
 
   return (
     <TableControlsContainer>
-      {headerRowIndex === undefined && (
-        <>
-          {!isSelectingHeaderRow && (
-            <button
-              onClick={() => {
-                useInteractionStore.setState((s) => ({
-                  ...s,
-                  isSelectingHeaderRow: true,
-                }));
-              }}
-            >
-              Change header row
-            </button>
-          )}
-          {isSelectingHeaderRow && <div>Click on the row you want to use as header.</div>}
-        </>
-      )}
+      <button
+        onClick={() => {
+          useInteractionStore.setState((s) => ({
+            ...s,
+            isSelectingHeaderRow: !s.isSelectingHeaderRow,
+          }));
+        }}
+      >
+        {isSelectingHeaderRow ? "Click the row you want to use as header" : "Change header row"}
+      </button>
       <button
         onClick={() => {
           useInteractionStore.setState((s) => ({
@@ -45,13 +37,12 @@ export const TableControls = () => {
           }));
           useGlobalStore.setState((s) => ({
             ...s,
-            currentTable: !isMappingColumns ? "mapping" : "preview",
+            currentTable: !isMappingColumns ? CURRENT_TABLE.Mapping : CURRENT_TABLE.Preview,
           }));
         }}
       >
         Map columns
       </button>
-      <button>Reset</button>
     </TableControlsContainer>
   );
 };

@@ -5,6 +5,7 @@ import styled from "styled-components";
 import {css} from "@emotion/react";
 import {DuplicateControls} from "../DuplicateEntries/DuplicateControls";
 import {useState} from "react";
+import {useGlobalStore} from "../../store/global/GlobalStore";
 
 interface DuplicatesRowProps {
   group: Array<PreviewTableRow>;
@@ -16,6 +17,8 @@ interface DuplicatesRowProps {
 export const DuplicatesRow: React.FC<DuplicatesRowProps> = ({group, parentRef, rows, isFirstGroup}) => {
   const [isMergingManually, setIsMergingManually] = useState(false);
   const [newRow, setNewRow] = useState<Record<string, string | number>>(group[0].original);
+
+  const csvData = useGlobalStore((s) => s.csvData);
 
   const rowVirtualizer = useWindowVirtualizer({
     count: group.length,
@@ -90,7 +93,16 @@ export const DuplicatesRow: React.FC<DuplicatesRowProps> = ({group, parentRef, r
             </div>
             <button
               onClick={() => {
-                console.log("%c ", "background: pink; color: black", newRow);
+                const duplicatedRows = group.map((row) => row.original.index);
+                const filteredCsv = csvData.filter((data) => !duplicatedRows.includes(data["index"])).concat(newRow);
+
+                setIsMergingManually(false);
+
+                useGlobalStore.setState((s) => ({
+                  ...s,
+                  csvData: filteredCsv,
+                  csvDataToDisplay: filteredCsv,
+                }));
               }}
             >
               Confirm

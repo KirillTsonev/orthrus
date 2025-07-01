@@ -15,6 +15,11 @@ export const MapColumns: React.FC<MapColumnsProps> = ({rows}) => {
 
   return (
     <MapColumnsContainer>
+      <div style={{display: "flex", gap: "10px"}}>
+        <div style={{minWidth: "120px", textAlign: "left"}}>Original header</div>
+        <div style={{minWidth: "125px"}}>Orthrus field</div>
+        <div style={{minWidth: "500px", textAlign: "left"}}>Sample value</div>
+      </div>
       {genericFields.map(([key]) => {
         const fieldId = key.toLowerCase().replace(" ", "_");
         const isOrthrusField = orthrusFields.includes(fieldId as ORTHRUS_FIELDS_IDS);
@@ -49,7 +54,7 @@ const MapColumnsContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding-bottom: 20px;
+  padding: 20px 0;
 `;
 
 const MappingRow = styled.div`

@@ -25,7 +25,7 @@ export const TableRow: React.FC<TableRowProps> = ({row}) => {
           }));
           useGlobalStore.setState((s) => ({
             ...s,
-            headerRowIndex: row.index,
+            headerRowIndex: row.original.index as number,
           }));
         }
       }}
@@ -39,6 +39,7 @@ export const TableRow: React.FC<TableRowProps> = ({row}) => {
           <TableCell
             row={row}
             cell={cell}
+            key={cell.id}
           />
         );
       })}

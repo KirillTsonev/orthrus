@@ -19,7 +19,7 @@ export const UploadButton = () => {
       onUploadAccepted={(results: ParseResults) => {
         const csvObjects = csvArrayToObjects(results.data);
         const columnVisibility = Object.keys(csvObjects[0] || {}).reduce<Record<string, boolean>>((acc, key) => {
-          if (key === "index") acc[key] = false;
+          if (key === "index") acc["0"] = false;
           if (key !== "index") acc[key] = true;
           return acc;
         }, {});
@@ -34,7 +34,8 @@ export const UploadButton = () => {
     >
       {({getRootProps, acceptedFile}: CSVReaderRenderProps) => (
         <>
-          <div style={{display: "flex", gap: "10px", justifyContent: "center", padding: "20px"}}>
+          <h2>Upload a CSV file</h2>
+          <div style={{display: "flex", gap: "10px", justifyContent: "center", padding: "10px"}}>
             <button
               type="button"
               {...getRootProps()}

@@ -26,17 +26,34 @@ export const TableCell: React.FC<TableCellProps> = ({cell, row}) => {
   const isDeletingColumns = useInteractionStore((s) => s.isDeletingColumns);
   const {getFlexAndWidth} = useResponsiveTable();
   const {validateCell} = useValidateTable();
+
   const cellSize = cell.column.getSize();
   const isRequiredField = Object.values(REQUIRED_TABLE_FIELDS_IDS).includes(cell.column.id as REQUIRED_TABLE_FIELDS_IDS);
   const cellValue = cell.getValue() as string;
   const cellId = cell.column.id as GENERIC_FIELDS_IDS;
   const valueToValidate = newText ? newText : cellValue;
-  const validateCellResult = row.index === 0 ? true : validateCell(valueToValidate, cellId);
+  const validateCellResult = row.original.index === 0 ? true : validateCell(valueToValidate, cellId);
   const cellContainerRef = useRef<HTMLDivElement | null>(null);
 
   useOnClickOutside(cellContainerRef as React.RefObject<HTMLDivElement>, () => {
     setCurrentDisplay("cell");
   });
+
+  const patchCsvData = () => {
+    if (newText && newText !== cellValue && validateCell(newText, cellId)) {
+      useGlobalStore.setState((s) => {
+        const newData = [...s.csvData];
+        if (newData[row.index]) {
+          newData[row.index] = {...newData[row.index], [cell.column.id]: newText};
+        }
+        return {...s, data: newData};
+      });
+    } else {
+      useGlobalStore.setState((s) => ({
+        ...s,
+      }));
+    }
+  };
 
   return (
     <CellContainer
@@ -86,6 +103,7 @@ export const TableCell: React.FC<TableCellProps> = ({cell, row}) => {
           onChange={(e) => setNewText(e.target.value)}
           autoFocus
           value={newText}
+          onBlur={patchCsvData}
         />
       )}
     </CellContainer>

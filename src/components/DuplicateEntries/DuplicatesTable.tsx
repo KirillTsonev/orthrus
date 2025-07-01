@@ -4,7 +4,7 @@ import type {PreviewTableRow} from "types/previewTableTypes";
 import {Scrollbar} from "react-scrollbars-custom";
 import {DuplicatesRow} from "./DuplicatesRow";
 import {useEffect} from "react";
-import {useGlobalStore} from "../../store/global/GlobalStore";
+import {useGlobalStore, CURRENT_TABLE} from "../../store/global/GlobalStore";
 
 interface DuplicatesTableProps {
   rows: Array<PreviewTableRow>;
@@ -16,7 +16,7 @@ export const DuplicatesTable: React.FC<DuplicatesTableProps> = ({rows, parentRef
   const groupedDuplicates = groupDuplicates(rows);
 
   useEffect(() => {
-    if (groupedDuplicates.length === 0) useGlobalStore.setState((s) => ({...s, currentTable: "preview"}));
+    if (groupedDuplicates.length === 0) useGlobalStore.setState((s) => ({...s, currentTable: CURRENT_TABLE.Preview}));
   }, [groupedDuplicates]);
 
   return (
@@ -52,6 +52,7 @@ export const DuplicatesTable: React.FC<DuplicatesTableProps> = ({rows, parentRef
                 parentRef={parentRef}
                 rows={rows}
                 isFirstGroup={i === 0}
+                key={group[0].original.index}
               />
             );
           })}

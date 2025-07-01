@@ -73,6 +73,7 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({rows, parentRef}) => 
 
             return (
               <RowContainer
+                key={virtualRow.index}
                 css={css`
                   height: ${virtualRow.size}px;
                   transform: translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin + 20 + virtualRow.index * 5}px);
