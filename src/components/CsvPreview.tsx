@@ -1,22 +1,21 @@
 import {useGlobalStore} from "../store/global/GlobalStore";
 import {getCoreRowModel, useReactTable} from "@tanstack/react-table";
-
 import {useMemo, useRef} from "react";
-
 import styled from "styled-components";
 import {usePreviewColumnDefinitions} from "../hooks/previewTable/usePreviewColumnDefinitions";
-
 import {isEmpty} from "lodash-es";
 import {TableControls} from "./TableControls";
 import {PreviewTable} from "./PreviewTable";
+import {useInteractionStore} from "../store/interaction/InteractionStore";
+import {MapColumns} from "./MapColumns";
 
 export const CsvPreview = () => {
   const csvData = useGlobalStore((s) => s.csvData);
   const headerRowIndex = useGlobalStore((s) => s.headerRowIndex);
   const columnVisibility = useGlobalStore((s) => s.columnVisibility);
+  const isMappingColumns = useInteractionStore((s) => s.isMappingColumns);
 
   const parentRef = useRef<HTMLDivElement>(null);
-
   const {getColumnDefinitions: colDefs} = usePreviewColumnDefinitions();
 
   const tableData = useMemo(() => {
@@ -42,10 +41,13 @@ export const CsvPreview = () => {
   return (
     <TableContainer ref={parentRef}>
       <TableControls />
-      <PreviewTable
-        rows={rows}
-        parentRef={parentRef}
-      />
+      {!isMappingColumns && (
+        <PreviewTable
+          rows={rows}
+          parentRef={parentRef}
+        />
+      )}
+      {isMappingColumns && <MapColumns rows={rows} />}
     </TableContainer>
   );
 };

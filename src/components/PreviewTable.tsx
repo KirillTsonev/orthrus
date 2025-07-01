@@ -4,6 +4,7 @@ import {TableRow} from "./TableRow";
 import {useWindowVirtualizer} from "@tanstack/react-virtual";
 import {ROW_HEIGHT} from "./CsvPreview";
 import type {PreviewTableRow} from "types/previewTableTypes";
+import styled from "styled-components";
 
 interface PreviewTableProps {
   rows: Array<PreviewTableRow>;
@@ -19,18 +20,13 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({rows, parentRef}) => 
   });
 
   return (
-    <div
+    <TableContainer
       css={css`
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        position: relative;
-        height: ${rowVirtualizer.getTotalSize() + 20}px;
-        overflow: hidden;
+        height: ${rowVirtualizer.getTotalSize() + rows.length * 5 + 20}px;
       `}
     >
       <Scrollbar
-        style={{width: "100%", height: "100%"}}
+        style={{width: "100%", height: "100%", display: "flex"}}
         trackXProps={{
           renderer: (props) => {
             const {elementRef, style, ...restProps} = props;
@@ -56,22 +52,33 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({rows, parentRef}) => 
           const row = rows[virtualRow.index];
 
           return (
-            <div
+            <RowContainer
               css={css`
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
                 height: ${virtualRow.size}px;
-                transform: translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin + 20}px);
+                transform: translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin + 20 + virtualRow.index * 5}px);
               `}
               data-index={virtualRow.index}
             >
               <TableRow row={row} />
-            </div>
+            </RowContainer>
           );
         })}
       </Scrollbar>
-    </div>
+    </TableContainer>
   );
 };
+
+const TableContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+`;
+
+const RowContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+`;

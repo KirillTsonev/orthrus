@@ -1,5 +1,6 @@
 import {useGlobalStore} from "../store/global/GlobalStore";
 import {useCSVReader} from "react-papaparse";
+import {csvArrayToObjects} from "../utils/previewUtils";
 
 type ParseResults = {
   data: Array<Array<string>>;
@@ -45,19 +46,3 @@ export const UploadButton = () => {
     </CSVReader>
   );
 };
-
-function csvArrayToObjects(data: string[][], headerRowIndex = 0): Record<string, string>[] {
-  if (!data.length || data.length <= headerRowIndex) return [];
-
-  const headers = data[headerRowIndex].map((h) => h.trim());
-
-  return data.map((row) => {
-    const obj: Record<string, string> = {};
-
-    headers.forEach((header, i) => {
-      obj[header] = (row[i] ?? "").trim();
-    });
-
-    return obj;
-  });
-}

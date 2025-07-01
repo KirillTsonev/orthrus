@@ -1,23 +1,14 @@
 import {createColumnHelper} from "@tanstack/react-table";
 import {useMemo} from "react";
 import {useGlobalStore} from "../../store/global/GlobalStore";
-
-const getTextWidth = (text: string, font = "14px Arial") => {
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
-  if (!context) return 0;
-  context.font = font;
-  return context.measureText(text).width;
-};
-
-const capitalizeWords = (str: string) => str.replace(/\b\w/g, (char) => char.toUpperCase());
+import {capitalizeWords, getTextWidth, findHeaderRowIndex} from "../../utils/previewUtils";
 
 export const usePreviewColumnDefinitions = () => {
-  const csvData = useGlobalStore().csvData;
-  const headerKeys = Object.keys(Object.assign({}, ...csvData));
+  const csvData = useGlobalStore((s) => s.csvData);
+  const headerRowIndex = useMemo(() => findHeaderRowIndex(csvData), [csvData]);
+  const headerRow = csvData[headerRowIndex] || {};
+  const headerKeys = Object.values(headerRow).map(String);
   const columnHelper = createColumnHelper<Record<string, string | number | null>>();
-
-  console.log("%c ", "background: pink; color: black", headerKeys);
 
   const getColumnDefinitions = useMemo(() => {
     return headerKeys.map((col) => {
