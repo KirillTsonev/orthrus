@@ -131,6 +131,11 @@ const DeleteColumnButton = styled.button`
   border-radius: 5px;
   border: none;
   background-color: transparent;
+  padding: 0;
+
+  &:hover {
+    background: transparent;
+  }
 `;
 
 const getCellBorderColor = (validateCellResult: boolean, newText: undefined | string) => {

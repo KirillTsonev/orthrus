@@ -1,6 +1,7 @@
 import {useGlobalStore} from "../store/global/GlobalStore";
 import {useCSVReader} from "react-papaparse";
 import {csvArrayToObjects} from "../utils/previewUtils";
+import styled from "styled-components";
 
 type ParseResults = {
   data: Array<Array<string>>;
@@ -36,7 +37,7 @@ export const UploadButton = () => {
       {({getRootProps, acceptedFile}: CSVReaderRenderProps) => (
         <>
           <h2>Upload a CSV file</h2>
-          <div style={{display: "flex", gap: "10px", justifyContent: "center", padding: "10px"}}>
+          <UploadContainer>
             <button
               type="button"
               {...getRootProps()}
@@ -44,9 +45,17 @@ export const UploadButton = () => {
               Browse file
             </button>
             <div>{acceptedFile && acceptedFile.name}</div>
-          </div>
+          </UploadContainer>
         </>
       )}
     </CSVReader>
   );
 };
+
+const UploadContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px;
+  align-items: center;
+`;

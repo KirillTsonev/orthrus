@@ -19,3 +19,16 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background: limegreen;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+button:hover {
+  background: green;
+}

@@ -12,6 +12,7 @@ export const DuplicateControls: React.FC<DuplicateControlsProps> = ({group, setI
   return (
     <div style={{height: "20px", display: "flex", gap: "10px", justifyContent: "center"}}>
       <button
+        style={{padding: "0 10px"}}
         onClick={() => {
           const notFirstRows = group.slice(1).map((row) => row.original.index);
           const filteredCsv = csvData.filter((data) => !notFirstRows.includes(data["index"]));
@@ -26,6 +27,7 @@ export const DuplicateControls: React.FC<DuplicateControlsProps> = ({group, setI
         Keep first row
       </button>
       <button
+        style={{padding: "0 10px"}}
         onClick={() => {
           const notLastRows = group.slice(0, -1).map((row) => row.original.index);
           const filteredCsv = csvData.filter((data) => !notLastRows.includes(data["index"]));
@@ -39,8 +41,14 @@ export const DuplicateControls: React.FC<DuplicateControlsProps> = ({group, setI
       >
         Keep last row
       </button>
-      <button onClick={setIsMergingManually}>Merge manually</button>
       <button
+        style={{padding: "0 10px"}}
+        onClick={setIsMergingManually}
+      >
+        Merge manually
+      </button>
+      <button
+        style={{padding: "0 10px"}}
         onClick={() => {
           const duplicatedRows = group.map((row) => row.original.index);
           const filteredCsv = csvData.filter((data) => !duplicatedRows.includes(data["index"]));

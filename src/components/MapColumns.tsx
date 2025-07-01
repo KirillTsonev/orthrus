@@ -13,6 +13,7 @@ interface MapColumnsProps {
 export const MapColumns: React.FC<MapColumnsProps> = ({rows}) => {
   const columnVisibility = useGlobalStore((s) => s.columnVisibility);
   const genericFields = Object.entries(columnVisibility).filter(([, value]) => !!value);
+  const sortedOrthrus = genericFields.map(([key]) => key.toLocaleLowerCase().replace(" ", "_"));
   const csvData = useGlobalStore((s) => s.csvData);
 
   const [fieldMapping, setFieldMapping] = useState<Record<string, string>>(
@@ -83,7 +84,7 @@ export const MapColumns: React.FC<MapColumnsProps> = ({rows}) => {
               onChange={(e) => handleMappingChange(key, e.target.value)}
             >
               <option value="">-- Select --</option>
-              {Object.values(ORTHRUS_FIELDS_IDS).map((orthKey) => (
+              {sortedOrthrus.map((orthKey) => (
                 <option
                   key={orthKey}
                   value={orthKey}
