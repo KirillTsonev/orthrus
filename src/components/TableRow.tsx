@@ -2,15 +2,15 @@ import {css} from "@emotion/react";
 import {flexRender} from "@tanstack/react-table";
 import styled from "styled-components";
 import {useResponsiveTable} from "../hooks/previewTable/useResponsiveTable";
-import {ROW_HEIGHT} from "./CsvPreviewTable";
+import {ROW_HEIGHT} from "./CsvPreview";
 import {useInteractionStore} from "../store/interaction/InteractionStore";
 import {useGlobalStore} from "../store/global/GlobalStore";
 import DeleteIcon from "../assets/icons/trash-can.png";
-import type {Row} from "@tanstack/react-table";
 import {REQUIRED_TABLE_FIELDS_IDS} from "../config/consts";
+import type {PreviewTableRow} from "../types/previewTableTypes";
 
 interface TableRowProps {
-  row: Row<unknown>;
+  row: PreviewTableRow;
 }
 
 export const TableRow: React.FC<TableRowProps> = ({row}) => {

@@ -34,7 +34,17 @@ export const TableControls = () => {
           }));
         }}
       >
-        {isDeletingColumns ? "Confirm deletion" : "Delete columns?"}
+        {isDeletingColumns ? "Confirm deletion" : "Delete columns"}
+      </button>
+      <button
+        onClick={() => {
+          useInteractionStore.setState((s) => ({
+            ...s,
+            isMappingColumns: !s.isMappingColumns,
+          }));
+        }}
+      >
+        Map columns
       </button>
       <button>Reset</button>
     </TableControlsContainer>
