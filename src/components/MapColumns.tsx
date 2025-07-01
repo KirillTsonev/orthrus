@@ -27,7 +27,6 @@ export const MapColumns: React.FC<MapColumnsProps> = ({rows}) => {
     }));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const editedData = csvData.map((row) =>
     Object.fromEntries(
       Object.entries(row)
@@ -41,6 +40,9 @@ export const MapColumns: React.FC<MapColumnsProps> = ({rows}) => {
         })
     )
   );
+
+  // unused for now
+  console.log(editedData);
 
   const mappedValues = Object.values(fieldMapping).filter((v) => v !== "Ignore");
   const uniqueMappedValues = new Set(mappedValues);
