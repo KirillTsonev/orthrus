@@ -6,6 +6,7 @@ export const TableControls = () => {
   const isSelectingHeaderRow = useInteractionStore((s) => s.isSelectingHeaderRow);
   const isDeletingColumns = useInteractionStore((s) => s.isDeletingColumns);
   const headerRowIndex = useGlobalStore((s) => s.headerRowIndex);
+  const isMappingColumns = useInteractionStore((s) => s.isMappingColumns);
 
   return (
     <TableControlsContainer>
@@ -41,6 +42,10 @@ export const TableControls = () => {
           useInteractionStore.setState((s) => ({
             ...s,
             isMappingColumns: !s.isMappingColumns,
+          }));
+          useGlobalStore.setState((s) => ({
+            ...s,
+            currentTable: !isMappingColumns ? "mapping" : "preview",
           }));
         }}
       >

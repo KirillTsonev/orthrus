@@ -6,24 +6,29 @@ import {usePreviewColumnDefinitions} from "../hooks/previewTable/usePreviewColum
 import {isEmpty} from "lodash-es";
 import {TableControls} from "./TableControls";
 import {PreviewTable} from "./PreviewTable";
-import {useInteractionStore} from "../store/interaction/InteractionStore";
 import {MapColumns} from "./MapColumns";
+import {TableFilters} from "./TableFilters";
+import {DuplicatesTable} from "./DuplicatesTable";
 
 export const CsvPreview = () => {
-  const csvData = useGlobalStore((s) => s.csvData);
+  const csvDataToDisplay = useGlobalStore((s) => s.csvDataToDisplay);
   const headerRowIndex = useGlobalStore((s) => s.headerRowIndex);
   const columnVisibility = useGlobalStore((s) => s.columnVisibility);
-  const isMappingColumns = useInteractionStore((s) => s.isMappingColumns);
+  const currentTable = useGlobalStore((s) => s.currentTable);
 
   const parentRef = useRef<HTMLDivElement>(null);
   const {getColumnDefinitions: colDefs} = usePreviewColumnDefinitions();
 
   const tableData = useMemo(() => {
     if (headerRowIndex !== undefined) {
-      return [csvData[headerRowIndex], ...csvData.slice(0, headerRowIndex), ...csvData.slice(headerRowIndex + 1)];
+      return [
+        csvDataToDisplay[headerRowIndex],
+        ...csvDataToDisplay.slice(0, headerRowIndex),
+        ...csvDataToDisplay.slice(headerRowIndex + 1),
+      ];
     }
-    return csvData;
-  }, [csvData, headerRowIndex]);
+    return csvDataToDisplay;
+  }, [csvDataToDisplay, headerRowIndex]);
 
   const table = useReactTable({
     data: tableData,
@@ -36,18 +41,20 @@ export const CsvPreview = () => {
 
   const {rows} = table.getRowModel();
 
-  if (isEmpty(csvData[0])) return null;
+  if (isEmpty(csvDataToDisplay[0])) return null;
 
   return (
     <TableContainer ref={parentRef}>
       <TableControls />
-      {!isMappingColumns && (
+      <TableFilters />
+      {currentTable === "preview" && (
         <PreviewTable
           rows={rows}
           parentRef={parentRef}
         />
       )}
-      {isMappingColumns && <MapColumns rows={rows} />}
+      {currentTable === "mapping" && <MapColumns rows={rows} />}
+      {currentTable === "duplicates" && <DuplicatesTable />}
     </TableContainer>
   );
 };
@@ -58,7 +65,6 @@ const TableContainer = styled.div`
   align-items: center;
   gap: 15px;
   align-self: stretch;
-  border: solid 1px green;
   position: relative;
 `;
 

@@ -44,7 +44,7 @@ export const TableCell: React.FC<TableCellProps> = ({cell, row}) => {
       css={css`
         font-weight: ${row.index === 0 ? "bold" : "normal"};
         height: ${ROW_HEIGHT}px;
-        outline: 1px solid ${getCellBorderColor(validateCellResult, newText)};
+        border: 2px solid ${getCellBorderColor(validateCellResult, newText)};
 
         ${getFlexAndWidth(cellSize)};
       `}

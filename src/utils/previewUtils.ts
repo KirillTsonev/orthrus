@@ -13,7 +13,7 @@ export const csvArrayToObjects = (data: Array<Array<string>>, headerRowIndex = 0
 
   const headers = data[headerRowIndex].map((h) => h.trim());
 
-  return data.map((row) => {
+  const transformedData = data.map((row) => {
     const obj: Record<string, string> = {};
 
     headers.forEach((header, i) => {
@@ -22,6 +22,8 @@ export const csvArrayToObjects = (data: Array<Array<string>>, headerRowIndex = 0
 
     return obj;
   });
+
+  return transformedData;
 };
 
 export const findHeaderRowIndex = (data: Array<Record<string, string>>): number => {

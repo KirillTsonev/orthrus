@@ -26,5 +26,40 @@ export const useValidateTable = () => {
     return true;
   };
 
-  return {validateCell};
+  const findDuplicates = (rows: Array<Record<string, string>>): Array<number> => {
+    const emailMap = new Map<string, Array<number>>();
+    const trioMap = new Map<string, Array<number>>();
+
+    rows.forEach((row, idx) => {
+      const email = (row["Email"] || "").toLowerCase().trim();
+      const firstName = (row["First Name"] || "").toLowerCase().trim();
+      const lastName = (row["last Name"] || "").toLowerCase().trim();
+      const company = (row["Company"] || "").toLowerCase().trim();
+
+      if (email) {
+        if (!emailMap.has(email)) emailMap.set(email, []);
+        emailMap.get(email)!.push(idx);
+      }
+
+      if (firstName && lastName && company) {
+        const trioKey = `${firstName}|${lastName}|${company}`;
+        if (!trioMap.has(trioKey)) trioMap.set(trioKey, []);
+        trioMap.get(trioKey)!.push(idx);
+      }
+    });
+
+    const duplicateIndices = new Set<number>();
+
+    Array.from(emailMap.values()).forEach((indices) => {
+      if (indices.length > 1) indices.forEach((i) => duplicateIndices.add(i));
+    });
+
+    Array.from(trioMap.values()).forEach((indices) => {
+      if (indices.length > 1) indices.forEach((i) => duplicateIndices.add(i));
+    });
+
+    return Array.from(duplicateIndices);
+  };
+
+  return {validateCell, findDuplicates};
 };

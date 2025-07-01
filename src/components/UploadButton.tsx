@@ -26,6 +26,7 @@ export const UploadButton = () => {
         useGlobalStore.setState((s) => ({
           ...s,
           csvData: csvObjects,
+          csvDataToDisplay: csvObjects,
           columnVisibility: columnVisibility,
         }));
       }}
