@@ -70,6 +70,7 @@ const TableContainer = styled.div`
   align-items: center;
   gap: 15px;
   position: relative;
+  margin-bottom: 50px;
 `;
 
 export const ROW_HEIGHT = 50;

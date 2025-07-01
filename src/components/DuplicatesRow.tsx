@@ -3,6 +3,7 @@ import {useWindowVirtualizer} from "@tanstack/react-virtual";
 import {TableRow} from "./TableRow";
 import styled from "styled-components";
 import {css} from "@emotion/react";
+import {useGlobalStore} from "../store/global/GlobalStore";
 
 interface DuplicatesRowProps {
   group: Array<PreviewTableRow>;
@@ -12,6 +13,7 @@ interface DuplicatesRowProps {
 }
 
 export const DuplicatesRow: React.FC<DuplicatesRowProps> = ({group, parentRef, rows, isFirstGroup}) => {
+  const csvData = useGlobalStore((s) => s.csvData);
   const rowVirtualizer = useWindowVirtualizer({
     count: group.length,
     estimateSize: () => DUPLICATE_ROW_HEIGHT,
@@ -20,22 +22,57 @@ export const DuplicatesRow: React.FC<DuplicatesRowProps> = ({group, parentRef, r
   });
 
   return (
-    <div>
-      {isFirstGroup && (
-        <div style={{position: "relative", top: "20px"}}>
-          <TableRow row={rows[0]} />
-        </div>
-      )}
+    <div style={{marginTop: "20px"}}>
+      {isFirstGroup && <TableRow row={rows[0]} />}
       <GroupContainer
         css={css`
           height: ${group.length * DUPLICATE_ROW_HEIGHT + 20}px;
         `}
       >
         <div style={{height: "20px", display: "flex", gap: "10px", justifyContent: "center"}}>
-          <button>Keep first row</button>
-          <button>Keep last row</button>
+          <button
+            onClick={() => {
+              const notFirstRows = group.slice(1).map((row) => row.original.index);
+              const filteredCsv = csvData.filter((data) => !notFirstRows.includes(data["index"]));
+
+              useGlobalStore.setState((s) => ({
+                ...s,
+                csvData: filteredCsv,
+                csvDataToDisplay: filteredCsv,
+              }));
+            }}
+          >
+            Keep first row
+          </button>
+          <button
+            onClick={() => {
+              const notLastRows = group.slice(0, -1).map((row) => row.original.index);
+              const filteredCsv = csvData.filter((data) => !notLastRows.includes(data["index"]));
+
+              useGlobalStore.setState((s) => ({
+                ...s,
+                csvData: filteredCsv,
+                csvDataToDisplay: filteredCsv,
+              }));
+            }}
+          >
+            Keep last row
+          </button>
           <button>Merge manually</button>
-          <button>Delete duplicates</button>
+          <button
+            onClick={() => {
+              const duplicatedRows = group.map((row) => row.original.index);
+              const filteredCsv = csvData.filter((data) => !duplicatedRows.includes(data["index"]));
+
+              useGlobalStore.setState((s) => ({
+                ...s,
+                csvData: filteredCsv,
+                csvDataToDisplay: filteredCsv,
+              }));
+            }}
+          >
+            Delete duplicates
+          </button>
         </div>
         {rowVirtualizer.getVirtualItems().map((virtualRow, i) => {
           const row = group[virtualRow.index];
@@ -68,6 +105,7 @@ const GroupContainer = styled.div`
   top: 20px;
   width: auto;
   border: solid 2px red;
+  padding-top: 10px;
 `;
 
 const RowContainer = styled.div`

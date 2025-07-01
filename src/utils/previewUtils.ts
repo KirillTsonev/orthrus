@@ -8,13 +8,13 @@ export const getTextWidth = (text: string, font = "16px Labil Grotesk") => {
   return context.measureText(text).width;
 };
 
-export const csvArrayToObjects = (data: Array<Array<string>>, headerRowIndex = 0): Array<Record<string, string>> => {
+export const csvArrayToObjects = (data: Array<Array<string>>, headerRowIndex = 0): Array<Record<string, string | number>> => {
   if (!data.length || data.length <= headerRowIndex) return [];
 
   const headers = data[headerRowIndex].map((h) => h.trim());
 
-  const transformedData = data.map((row) => {
-    const obj: Record<string, string> = {};
+  const transformedData = data.map((row, i) => {
+    const obj: Record<string, string | number> = {index: i};
 
     headers.forEach((header, i) => {
       obj[header] = (row[i] ?? "").trim();
@@ -26,7 +26,7 @@ export const csvArrayToObjects = (data: Array<Array<string>>, headerRowIndex = 0
   return transformedData;
 };
 
-export const findHeaderRowIndex = (data: Array<Record<string, string>>): number => {
+export const findHeaderRowIndex = (data: Array<Record<string, string | number>>): number => {
   let maxUnique = 0;
   let headerIdx = 0;
 

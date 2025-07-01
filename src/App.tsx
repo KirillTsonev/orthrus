@@ -1,11 +1,21 @@
 import {UploadButton} from "./components/UploadButton";
 import {CsvPreview} from "./components/CsvPreview";
+import styled from "styled-components";
 
 export const App = () => {
   return (
-    <div style={{minWidth: "1280px", minHeight: "100vh", marginBottom: "50px"}}>
+    <AppContainer>
       <UploadButton />
       <CsvPreview />
-    </div>
+    </AppContainer>
   );
 };
+
+const AppContainer = styled.div`
+  max-width: 1280px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  margin: 0 auto;
+`;

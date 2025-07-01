@@ -1,8 +1,8 @@
 import {create} from "zustand";
 
 interface IGlobalStore {
-  csvDataToDisplay: Array<Record<string, string>>;
-  csvData: Array<Record<string, string>>;
+  csvDataToDisplay: Array<Record<string, string | number>>;
+  csvData: Array<Record<string, string | number>>;
   headerRowIndex: number | undefined;
   columnVisibility: Record<string, boolean>;
   currentTable: string;

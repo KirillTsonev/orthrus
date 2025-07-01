@@ -19,7 +19,8 @@ export const UploadButton = () => {
       onUploadAccepted={(results: ParseResults) => {
         const csvObjects = csvArrayToObjects(results.data);
         const columnVisibility = Object.keys(csvObjects[0] || {}).reduce<Record<string, boolean>>((acc, key) => {
-          acc[key] = true;
+          if (key === "index") acc[key] = false;
+          if (key !== "index") acc[key] = true;
           return acc;
         }, {});
 

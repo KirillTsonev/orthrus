@@ -6,10 +6,10 @@ export const useGroupDuplicates = () => {
 
     rows.forEach((row) => {
       const original = row.original;
-      const email = (original["Email"] || "").toLowerCase().trim();
-      const firstName = (original["First Name"] || "").toLowerCase().trim();
-      const lastName = (original["last Name"] || "").toLowerCase().trim();
-      const company = (original["Company"] || "").toLowerCase().trim();
+      const email = ((original["Email"] as string) || "").toLowerCase().trim();
+      const firstName = ((original["First Name"] as string) || "").toLowerCase().trim();
+      const lastName = ((original["last Name"] as string) || "").toLowerCase().trim();
+      const company = ((original["Company"] as string) || "").toLowerCase().trim();
 
       let key = "";
       if (email) {

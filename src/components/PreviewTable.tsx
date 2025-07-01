@@ -26,7 +26,7 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({rows, parentRef}) => 
       `}
     >
       <Scrollbar
-        style={{width: "100%", height: "100%", display: "flex"}}
+        style={{width: "100%", height: "100%"}}
         trackXProps={{
           renderer: (props) => {
             const {elementRef, style, ...restProps} = props;
@@ -47,21 +47,42 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({rows, parentRef}) => 
             );
           },
         }}
-      >
-        {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-          const row = rows[virtualRow.index];
+        wrapperProps={{
+          renderer: (props) => {
+            const {elementRef, style, ...restProps} = props;
 
-          return (
-            <RowContainer
-              css={css`
-                height: ${virtualRow.size}px;
-                transform: translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin + 20 + virtualRow.index * 5}px);
-              `}
-            >
-              <TableRow row={row} />
-            </RowContainer>
-          );
-        })}
+            return (
+              <div
+                {...restProps}
+                ref={elementRef}
+                style={{
+                  ...style,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  left: 0,
+                }}
+              />
+            );
+          },
+        }}
+      >
+        <div style={{display: "flex", flexDirection: "column", minWidth: "max-content"}}>
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const row = rows[virtualRow.index];
+
+            return (
+              <RowContainer
+                css={css`
+                  height: ${virtualRow.size}px;
+                  transform: translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin + 20 + virtualRow.index * 5}px);
+                `}
+              >
+                <TableRow row={row} />
+              </RowContainer>
+            );
+          })}
+        </div>
       </Scrollbar>
     </TableContainer>
   );
@@ -70,7 +91,7 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({rows, parentRef}) => 
 const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  min-width: 100%;
   position: relative;
   overflow: hidden;
 `;

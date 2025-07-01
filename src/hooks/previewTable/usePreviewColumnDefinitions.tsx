@@ -8,7 +8,7 @@ export const usePreviewColumnDefinitions = () => {
   const headerRowIndex = useMemo(() => findHeaderRowIndex(csvData), [csvData]);
   const headerRow = csvData[headerRowIndex] || {};
   const headerKeys = Object.values(headerRow).map(String);
-  const columnHelper = createColumnHelper<Record<string, string | null>>();
+  const columnHelper = createColumnHelper<Record<string, string | number>>();
 
   const getColumnDefinitions = useMemo(() => {
     return headerKeys.map((col) => {
@@ -25,7 +25,7 @@ export const usePreviewColumnDefinitions = () => {
         id: capitalizeWords(col),
         header: capitalizeWords(col),
         cell: (props) => (col.match(/email/gi) ? props.row.original[col] : capitalizeWords(String(props.row.original[col] ?? ""))),
-        size: finalWidth,
+        size: col === "0" ? 0 : finalWidth,
       });
     });
   }, [columnHelper, headerKeys, csvData]);
