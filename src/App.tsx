@@ -1,5 +1,6 @@
 import {UploadButton} from "./components/UploadButton";
 import {CsvPreview} from "./components/CsvPreview";
+import {UploadModal} from "./components/UploadModal";
 import styled from "styled-components";
 
 export const App = () => {
@@ -7,6 +8,7 @@ export const App = () => {
     <AppContainer>
       <UploadButton />
       <CsvPreview />
+      <UploadModal />
     </AppContainer>
   );
 };

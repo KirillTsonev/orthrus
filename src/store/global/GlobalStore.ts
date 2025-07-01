@@ -20,6 +20,7 @@ interface IGlobalStore {
   currentTable: CURRENT_TABLE;
   currentFilter: CURRENT_FILTER;
   orthrusCsvData: Array<Record<string, string>>;
+  totalRowsNumber: number;
 }
 
 const INITIAL_GLOBAL_STORE = {
@@ -30,6 +31,7 @@ const INITIAL_GLOBAL_STORE = {
   currentTable: CURRENT_TABLE.Preview,
   currentFilter: CURRENT_FILTER.All,
   orthrusCsvData: [{}],
+  totalRowsNumber: 0,
 };
 
 export const useGlobalStore = create<IGlobalStore>(() => ({...INITIAL_GLOBAL_STORE}));

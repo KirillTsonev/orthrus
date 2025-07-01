@@ -23,12 +23,13 @@ export const UploadButton = () => {
           if (key !== "index") acc[key] = true;
           return acc;
         }, {});
-        console.log("%c csvObjects", "background: pink; color: black", csvObjects);
+
         useGlobalStore.setState((s) => ({
           ...s,
           csvData: csvObjects,
           csvDataToDisplay: csvObjects,
           columnVisibility: columnVisibility,
+          totalRowsNumber: csvObjects.length - 1,
         }));
       }}
     >

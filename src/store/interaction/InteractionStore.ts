@@ -5,6 +5,7 @@ interface IInteractionStore {
   isDeletingColumns: boolean;
   isMappingColumns: boolean;
   isMappingDone: boolean;
+  isUploadModalOpen: boolean;
 }
 
 const INITIAL_INTERACTION_STORE = {
@@ -12,6 +13,7 @@ const INITIAL_INTERACTION_STORE = {
   isDeletingColumns: false,
   isMappingColumns: false,
   isMappingDone: false,
+  isUploadModalOpen: false,
 };
 
 export const useInteractionStore = create<IInteractionStore>(() => ({

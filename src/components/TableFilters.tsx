@@ -114,7 +114,12 @@ export const TableFilters = () => {
       <button
         disabled={!noDuplicates || !noErrors || !isMappingDone}
         style={{padding: "10px", margin: "10px 0"}}
-        onClick={() => {}}
+        onClick={() => {
+          useInteractionStore.setState((s) => ({
+            ...s,
+            isUploadModalOpen: true,
+          }));
+        }}
       >
         Finish CSV upload
       </button>
