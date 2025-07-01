@@ -3,6 +3,7 @@ import {useGlobalStore, CURRENT_TABLE, CURRENT_FILTER} from "../store/global/Glo
 import {useValidateTable} from "../hooks/previewTable/useValidateTable";
 import {GENERIC_FIELDS_IDS} from "../config/consts";
 import {isEmpty} from "lodash-es";
+import {useInteractionStore} from "../store/interaction/InteractionStore";
 
 const columnToFieldId: Record<string, GENERIC_FIELDS_IDS> = {
   "First Name": GENERIC_FIELDS_IDS.FirstName,
@@ -18,9 +19,9 @@ const columnToFieldId: Record<string, GENERIC_FIELDS_IDS> = {
 export const TableFilters = () => {
   const csvData = useGlobalStore((s) => s.csvData);
   const currentFilter = useGlobalStore((s) => s.currentFilter);
+  const isMappingDone = useInteractionStore((s) => s.isMappingDone);
   const {validateCell, findDuplicates} = useValidateTable();
   const duplicates = findDuplicates(csvData);
-
   const cleanData = csvData
     .slice(1)
     .filter((row) => Object.entries(columnToFieldId).every(([col, fieldId]) => validateCell(row[col], fieldId)));
@@ -111,8 +112,9 @@ export const TableFilters = () => {
         )}
       </div>
       <button
-        disabled={!noDuplicates || !noErrors}
+        disabled={!noDuplicates || !noErrors || !isMappingDone}
         style={{padding: "10px", margin: "10px 0"}}
+        onClick={() => {}}
       >
         Finish CSV upload
       </button>

@@ -19,6 +19,7 @@ interface IGlobalStore {
   columnVisibility: Record<string, boolean>;
   currentTable: CURRENT_TABLE;
   currentFilter: CURRENT_FILTER;
+  orthrusCsvData: Array<Record<string, string>>;
 }
 
 const INITIAL_GLOBAL_STORE = {
@@ -28,6 +29,7 @@ const INITIAL_GLOBAL_STORE = {
   columnVisibility: {},
   currentTable: CURRENT_TABLE.Preview,
   currentFilter: CURRENT_FILTER.All,
+  orthrusCsvData: [{}],
 };
 
 export const useGlobalStore = create<IGlobalStore>(() => ({...INITIAL_GLOBAL_STORE}));

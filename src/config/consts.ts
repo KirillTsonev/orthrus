@@ -23,6 +23,8 @@ export enum ORTHRUS_FIELDS_IDS {
   Company = "company",
   PipelineStage = "pipeline_stage",
   Phone = "phone_number",
+  Address = "address",
+  JobTitle = "job_title",
 }
 
 export enum PIPELINE_STAGES {

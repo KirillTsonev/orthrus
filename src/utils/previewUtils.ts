@@ -11,13 +11,14 @@ export const getTextWidth = (text: string, font = "16px Labil Grotesk") => {
 export const csvArrayToObjects = (data: Array<Array<string>>, headerRowIndex = 0): Array<Record<string, string | number>> => {
   if (!data.length || data.length <= headerRowIndex) return [];
 
-  const headers = data[headerRowIndex].map((h) => h.trim());
+  const headers = data[headerRowIndex].map((h) => capitalizeWords(h.trim().replace(/\s+/g, " ")));
 
   const transformedData = data.map((row, i) => {
     const obj: Record<string, string | number> = {index: i};
 
     headers.forEach((header, i) => {
-      obj[header] = (row[i] ?? "").trim();
+      const editedHeader = capitalizeWords(header.replace(/\s+/g, " "));
+      obj[editedHeader] = capitalizeWords((row[i] ?? "").trim().replace(/\s+/g, " "));
     });
 
     return obj;

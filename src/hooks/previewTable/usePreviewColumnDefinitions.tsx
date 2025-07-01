@@ -22,8 +22,8 @@ export const usePreviewColumnDefinitions = () => {
       const finalWidth = maxContentWidth + 40;
 
       return columnHelper.accessor(col, {
-        id: capitalizeWords(col),
-        header: capitalizeWords(col),
+        id: capitalizeWords(col).replace(/\s+/g, " "),
+        header: capitalizeWords(col).replace(/\s+/g, " "),
         cell: (props) => (col.match(/email/gi) ? props.row.original[col] : capitalizeWords(String(props.row.original[col] ?? ""))),
         size: col === "0" ? 0 : finalWidth,
       });

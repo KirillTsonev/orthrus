@@ -1,8 +1,10 @@
 import styled from "styled-components";
 import {useGlobalStore} from "../store/global/GlobalStore";
-import {ORTHRUS_FIELDS_IDS} from "../config/consts";
+import {GENERIC_FIELDS_IDS, ORTHRUS_FIELDS_IDS} from "../config/consts";
 import {capitalizeWords} from "../utils/previewUtils";
 import type {PreviewTableRow} from "../types/previewTableTypes";
+import {useState, useEffect} from "react";
+import {useInteractionStore} from "../store/interaction/InteractionStore";
 
 interface MapColumnsProps {
   rows: Array<PreviewTableRow>;
@@ -11,19 +13,63 @@ interface MapColumnsProps {
 export const MapColumns: React.FC<MapColumnsProps> = ({rows}) => {
   const columnVisibility = useGlobalStore((s) => s.columnVisibility);
   const genericFields = Object.entries(columnVisibility).filter(([, value]) => !!value);
-  const orthrusFields = Object.values(ORTHRUS_FIELDS_IDS);
+  const csvData = useGlobalStore((s) => s.csvData);
+
+  const [fieldMapping, setFieldMapping] = useState<Record<string, string>>(
+    Object.fromEntries(genericFields.map(([key]) => [key, key]))
+  );
+
+  const handleMappingChange = (genericKey: string, selectedOrthrusKey: string) => {
+    setFieldMapping((prev) => ({
+      ...prev,
+      [genericKey]: selectedOrthrusKey,
+    }));
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const editedData = csvData.map((row) =>
+    Object.fromEntries(
+      Object.entries(row)
+        .filter(([key]) => key !== GENERIC_FIELDS_IDS.Address && key !== GENERIC_FIELDS_IDS.JobTitle)
+        .map(([key, value]) => {
+          const mappedKey =
+            fieldMapping[key] && fieldMapping[key] !== "Ignore"
+              ? ORTHRUS_FIELDS_IDS[fieldMapping[key] as keyof typeof ORTHRUS_FIELDS_IDS] || fieldMapping[key]
+              : key;
+          return [mappedKey, value];
+        })
+    )
+  );
+
+  const mappedValues = Object.values(fieldMapping).filter((v) => v !== "Ignore");
+  const uniqueMappedValues = new Set(mappedValues);
+
+  const allKeysChanged =
+    genericFields.every(([key]) => fieldMapping[key] && fieldMapping[key] !== key && fieldMapping[key] !== "Ignore") &&
+    uniqueMappedValues.size === mappedValues.length;
+
+  useEffect(() => {
+    if (allKeysChanged) {
+      useInteractionStore.setState((s) => ({
+        ...s,
+        isMappingDone: true,
+      }));
+    } else {
+      useInteractionStore.setState((s) => ({
+        ...s,
+        isMappingDone: false,
+      }));
+    }
+  }, [allKeysChanged]);
 
   return (
     <MapColumnsContainer>
       <div style={{display: "flex", gap: "10px"}}>
         <div style={{minWidth: "120px", textAlign: "left"}}>Original header</div>
         <div style={{minWidth: "125px"}}>Orthrus field</div>
-        <div style={{minWidth: "500px", textAlign: "left"}}>Sample value</div>
+        <div style={{minWidth: "430px", textAlign: "left"}}>Sample value</div>
       </div>
       {genericFields.map(([key]) => {
-        const fieldId = key.toLowerCase().replace(" ", "_");
-        const isOrthrusField = orthrusFields.includes(fieldId as ORTHRUS_FIELDS_IDS);
-
         return (
           <MappingRow key={key}>
             <div style={{minWidth: "120px", textAlign: "left"}}>{capitalizeWords(key)}</div>
@@ -32,16 +78,22 @@ export const MapColumns: React.FC<MapColumnsProps> = ({rows}) => {
               id="orthrus-column-mapping"
               style={{
                 minWidth: "125px",
-                pointerEvents: isOrthrusField ? "auto" : "none",
-                filter: isOrthrusField ? undefined : "brightness(0.7)",
               }}
-              defaultValue={isOrthrusField ? fieldId : "Ignore"}
+              value={fieldMapping[key] || ""}
+              onChange={(e) => handleMappingChange(key, e.target.value)}
             >
-              {isOrthrusField &&
-                genericFields.map(([field]) => <option key={field}>{capitalizeWords(field.replace("_", " "))}</option>)}
+              <option value="">-- Select --</option>
+              {Object.values(ORTHRUS_FIELDS_IDS).map((orthKey) => (
+                <option
+                  key={orthKey}
+                  value={orthKey}
+                >
+                  {capitalizeWords(orthKey).replace("_", " ")}
+                </option>
+              ))}
               <option>Ignore</option>
             </select>
-            <div style={{minWidth: "500px", textAlign: "left"}}>{rows[rows.length - 1]?.original[key]}</div>
+            <div style={{minWidth: "430px", textAlign: "left"}}>{rows[rows.length - 1]?.original[key]}</div>
           </MappingRow>
         );
       })}

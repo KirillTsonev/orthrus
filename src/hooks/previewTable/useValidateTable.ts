@@ -4,23 +4,23 @@ import {capitalizeWords} from "../../utils/previewUtils";
 export const useValidateTable = () => {
   const pipeLineStages = Object.values(PIPELINE_STAGES);
 
-  const validateCell = (cellContent: string | number, cellId: GENERIC_FIELDS_IDS): boolean => {
+  const validateCell = (cellContent: string | number | undefined, cellId: GENERIC_FIELDS_IDS): boolean => {
     if (cellId === GENERIC_FIELDS_IDS.FirstName || cellId === GENERIC_FIELDS_IDS.LastName) {
-      if ((cellContent as string).trim() === "") return false;
+      if (String(cellContent)?.trim() === "") return false;
     }
 
     if (cellId === GENERIC_FIELDS_IDS.Email) {
-      if ((cellContent as string).trim() === "") return false;
+      if (String(cellContent)?.trim() === "") return false;
     }
 
     if (cellId === GENERIC_FIELDS_IDS.PipelineStage) {
-      if (!pipeLineStages.includes(capitalizeWords(cellContent as string) as PIPELINE_STAGES)) return false;
+      if (!pipeLineStages.includes(capitalizeWords(String(cellContent)) as PIPELINE_STAGES)) return false;
     }
 
     if (cellId === GENERIC_FIELDS_IDS.PhoneNumber) {
       const phoneRegex = /^\+?[1-9]\d{1,14}$/;
 
-      if (!phoneRegex.test((cellContent as string).trim())) return false;
+      if (!phoneRegex.test(String(cellContent).trim())) return false;
     }
 
     return true;
