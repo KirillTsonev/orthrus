@@ -17,6 +17,7 @@
       "vite/client",
       "@emotion/react/types/css-prop"
     ],
+    "outDir": "./dist",
   },
   "exclude": [
     "vite.config.ts",
