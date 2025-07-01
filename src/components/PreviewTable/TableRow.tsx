@@ -1,9 +1,9 @@
 import {css} from "@emotion/react";
 import styled from "styled-components";
-import {useInteractionStore} from "../store/interaction/InteractionStore";
-import {useGlobalStore} from "../store/global/GlobalStore";
-import type {PreviewTableRow} from "../types/previewTableTypes";
-import {TableCell} from "./TableCell";
+import {useInteractionStore} from "../../store/interaction/InteractionStore";
+import {useGlobalStore} from "../../store/global/GlobalStore";
+import type {PreviewTableRow} from "../../types/previewTableTypes";
+import {TableCell} from "../PreviewTable/TableCell";
 
 interface TableRowProps {
   row: PreviewTableRow;

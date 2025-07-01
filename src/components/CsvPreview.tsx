@@ -5,10 +5,10 @@ import styled from "styled-components";
 import {usePreviewColumnDefinitions} from "../hooks/previewTable/usePreviewColumnDefinitions";
 import {isEmpty} from "lodash-es";
 import {TableControls} from "./TableControls";
-import {PreviewTable} from "./PreviewTable";
+import {PreviewTable} from "./PreviewTable/PreviewTable";
 import {MapColumns} from "./MapColumns";
 import {TableFilters} from "./TableFilters";
-import {DuplicatesTable} from "./DuplicatesTable";
+import {DuplicatesTable} from "./DuplicateEntries/DuplicatesTable";
 
 export const CsvPreview = () => {
   const csvDataToDisplay = useGlobalStore((s) => s.csvDataToDisplay);

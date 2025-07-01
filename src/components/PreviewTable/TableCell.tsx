@@ -1,19 +1,19 @@
 import styled from "styled-components";
 import {css} from "@emotion/react";
 import {flexRender} from "@tanstack/react-table";
-import {ROW_HEIGHT} from "./CsvPreview";
-import DeleteIcon from "../assets/icons/trash-can.png";
+import {ROW_HEIGHT} from "../CsvPreview";
+import DeleteIcon from "../../assets/icons/trash-can.png";
 import {useState, useRef} from "react";
 import {useOnClickOutside} from "usehooks-ts";
-import {useResponsiveTable} from "../hooks/previewTable/useResponsiveTable";
-import {useInteractionStore} from "../store/interaction/InteractionStore";
-import {useGlobalStore} from "../store/global/GlobalStore";
-import {useValidateTable} from "../hooks/previewTable/useValidateTable";
-import type {GENERIC_FIELDS_IDS} from "../config/consts";
-import {REQUIRED_TABLE_FIELDS_IDS} from "../config/consts";
-import type {PreviewTableRow} from "../types/previewTableTypes";
+import {useResponsiveTable} from "../../hooks/previewTable/useResponsiveTable";
+import {useInteractionStore} from "../../store/interaction/InteractionStore";
+import {useGlobalStore} from "../../store/global/GlobalStore";
+import {useValidateTable} from "../../hooks/previewTable/useValidateTable";
+import type {GENERIC_FIELDS_IDS} from "../../config/consts";
+import {REQUIRED_TABLE_FIELDS_IDS} from "../../config/consts";
+import type {PreviewTableRow} from "../../types/previewTableTypes";
 import type {Cell} from "@tanstack/react-table";
-import {capitalizeWords} from "../utils/previewUtils";
+import {capitalizeWords} from "../../utils/previewUtils";
 
 interface TableCellProps {
   row: PreviewTableRow;

@@ -2,7 +2,7 @@ import {Scrollbar} from "react-scrollbars-custom";
 import {css} from "@emotion/react";
 import {TableRow} from "./TableRow";
 import {useWindowVirtualizer} from "@tanstack/react-virtual";
-import {ROW_HEIGHT} from "./CsvPreview";
+import {ROW_HEIGHT} from "../CsvPreview";
 import type {PreviewTableRow} from "types/previewTableTypes";
 import styled from "styled-components";
 

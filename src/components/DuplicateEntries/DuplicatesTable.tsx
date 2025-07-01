@@ -1,8 +1,10 @@
-import {useGroupDuplicates} from "../hooks/duplicateTable/useGroupDuplicates";
+import {useGroupDuplicates} from "../../hooks/duplicateTable/useGroupDuplicates";
 import styled from "styled-components";
 import type {PreviewTableRow} from "types/previewTableTypes";
 import {Scrollbar} from "react-scrollbars-custom";
 import {DuplicatesRow} from "./DuplicatesRow";
+import {useEffect} from "react";
+import {useGlobalStore} from "../../store/global/GlobalStore";
 
 interface DuplicatesTableProps {
   rows: Array<PreviewTableRow>;
@@ -12,6 +14,10 @@ interface DuplicatesTableProps {
 export const DuplicatesTable: React.FC<DuplicatesTableProps> = ({rows, parentRef}) => {
   const {groupDuplicates} = useGroupDuplicates();
   const groupedDuplicates = groupDuplicates(rows);
+
+  useEffect(() => {
+    if (groupedDuplicates.length === 0) useGlobalStore.setState((s) => ({...s, currentTable: "preview"}));
+  }, [groupedDuplicates]);
 
   return (
     <DuplicatesContainer>
