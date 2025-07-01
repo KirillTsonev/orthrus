@@ -13,7 +13,6 @@ import type {GENERIC_FIELDS_IDS} from "../../config/consts";
 import {REQUIRED_TABLE_FIELDS_IDS} from "../../config/consts";
 import type {PreviewTableRow} from "../../types/previewTableTypes";
 import type {Cell} from "@tanstack/react-table";
-import {capitalizeWords} from "../../utils/previewUtils";
 
 interface TableCellProps {
   row: PreviewTableRow;
@@ -35,18 +34,16 @@ export const TableCell: React.FC<TableCellProps> = ({cell, row}) => {
   const validateCellResult = row.original.index === 0 ? true : validateCell(valueToValidate, cellId);
   const cellContainerRef = useRef<HTMLDivElement | null>(null);
 
-  useOnClickOutside(cellContainerRef as React.RefObject<HTMLDivElement>, () => {
-    setCurrentDisplay("cell");
-  });
-
   const patchCsvData = () => {
     if (newText && newText !== cellValue && validateCell(newText, cellId)) {
       useGlobalStore.setState((s) => {
         const newData = [...s.csvData];
+
         if (newData[row.index]) {
           newData[row.index] = {...newData[row.index], [cell.column.id]: newText};
         }
-        return {...s, data: newData};
+
+        return {...s, csvData: newData, csvDataToDisplay: newData};
       });
     } else {
       useGlobalStore.setState((s) => ({
@@ -54,6 +51,12 @@ export const TableCell: React.FC<TableCellProps> = ({cell, row}) => {
       }));
     }
   };
+
+  useOnClickOutside(cellContainerRef as React.RefObject<HTMLDivElement>, () => {
+    setCurrentDisplay("cell");
+    patchCsvData();
+    setNewText("");
+  });
 
   return (
     <CellContainer
@@ -66,8 +69,10 @@ export const TableCell: React.FC<TableCellProps> = ({cell, row}) => {
         ${getFlexAndWidth(cellSize)};
       `}
       onClick={() => {
-        const isPreviouslyEdited = validateCellResult && newText;
-        if (!validateCellResult || isPreviouslyEdited) setCurrentDisplay("input");
+        if (!validateCellResult) {
+          setCurrentDisplay("input");
+          console.log("%c ???", "background: pink; color: black");
+        }
       }}
       ref={cellContainerRef}
     >
@@ -93,7 +98,7 @@ export const TableCell: React.FC<TableCellProps> = ({cell, row}) => {
               />
             </DeleteColumnButton>
           )}
-          {newText ? capitalizeWords(newText) : flexRender(cell.column.columnDef.cell, cell.getContext())}
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </>
       )}
       {currentDisplay === "input" && (
@@ -103,7 +108,6 @@ export const TableCell: React.FC<TableCellProps> = ({cell, row}) => {
           onChange={(e) => setNewText(e.target.value)}
           autoFocus
           value={newText}
-          onBlur={patchCsvData}
         />
       )}
     </CellContainer>

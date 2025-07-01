@@ -18,7 +18,7 @@ export const csvArrayToObjects = (data: Array<Array<string>>, headerRowIndex = 0
 
     headers.forEach((header, i) => {
       const editedHeader = capitalizeWords(header.replace(/\s+/g, " "));
-      obj[editedHeader] = capitalizeWords((row[i] ?? "").trim().replace(/\s+/g, " "));
+      obj[editedHeader] = row[i].includes("@") ? row[i] ?? "" : capitalizeWords((row[i] ?? "").trim().replace(/\s+/g, " "));
     });
 
     return obj;
