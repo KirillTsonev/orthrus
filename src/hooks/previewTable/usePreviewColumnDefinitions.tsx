@@ -8,7 +8,7 @@ export const usePreviewColumnDefinitions = () => {
   const headerRowIndex = useMemo(() => findHeaderRowIndex(csvData), [csvData]);
   const headerRow = csvData[headerRowIndex] || {};
   const headerKeys = Object.values(headerRow).map(String);
-  const columnHelper = createColumnHelper<Record<string, string | number | null>>();
+  const columnHelper = createColumnHelper<Record<string, string | null>>();
 
   const getColumnDefinitions = useMemo(() => {
     return headerKeys.map((col) => {

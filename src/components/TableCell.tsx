@@ -17,7 +17,7 @@ import {capitalizeWords} from "../utils/previewUtils";
 
 interface TableCellProps {
   row: PreviewTableRow;
-  cell: Cell<Record<string, string | number | null>, unknown>;
+  cell: Cell<Record<string, string | null>, unknown>;
 }
 
 export const TableCell: React.FC<TableCellProps> = ({cell, row}) => {

@@ -57,7 +57,6 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({rows, parentRef}) => 
                 height: ${virtualRow.size}px;
                 transform: translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin + 20 + virtualRow.index * 5}px);
               `}
-              data-index={virtualRow.index}
             >
               <TableRow row={row} />
             </RowContainer>

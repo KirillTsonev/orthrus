@@ -54,7 +54,12 @@ export const CsvPreview = () => {
         />
       )}
       {currentTable === "mapping" && <MapColumns rows={rows} />}
-      {currentTable === "duplicates" && <DuplicatesTable />}
+      {currentTable === "duplicates" && (
+        <DuplicatesTable
+          rows={rows}
+          parentRef={parentRef}
+        />
+      )}
     </TableContainer>
   );
 };
@@ -64,7 +69,6 @@ const TableContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 15px;
-  align-self: stretch;
   position: relative;
 `;
 

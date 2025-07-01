@@ -1,19 +1,63 @@
-import {useGlobalStore} from "../store/global/GlobalStore";
 import {useGroupDuplicates} from "../hooks/duplicateTable/useGroupDuplicates";
+import styled from "styled-components";
+import type {PreviewTableRow} from "types/previewTableTypes";
+import {Scrollbar} from "react-scrollbars-custom";
+import {DuplicatesRow} from "./DuplicatesRow";
 
-export const DuplicatesTable: React.FC = () => {
-  const csvDataToDisplay = useGlobalStore((s) => s.csvDataToDisplay);
+interface DuplicatesTableProps {
+  rows: Array<PreviewTableRow>;
+  parentRef: React.RefObject<HTMLDivElement | null>;
+}
+
+export const DuplicatesTable: React.FC<DuplicatesTableProps> = ({rows, parentRef}) => {
   const {groupDuplicates} = useGroupDuplicates();
-
-  const groupedDuplicates = groupDuplicates(csvDataToDisplay);
-
-  console.log("%c ", "background: pink; color: black", groupedDuplicates);
+  const groupedDuplicates = groupDuplicates(rows);
 
   return (
-    <div>
-      {groupedDuplicates.map((group) => {
-        return <div>asd</div>;
-      })}
-    </div>
+    <DuplicatesContainer>
+      <Scrollbar
+        style={{height: "100%", width: "100%"}}
+        trackXProps={{
+          renderer: (props) => {
+            const {elementRef, style, ...restProps} = props;
+
+            return (
+              <div
+                {...restProps}
+                ref={elementRef}
+                style={{
+                  ...style,
+                  top: 0,
+                  bottom: "auto",
+                  position: "absolute",
+                  height: 15,
+                  background: "#eee",
+                }}
+              />
+            );
+          },
+        }}
+      >
+        <div style={{display: "flex", flexDirection: "column", minWidth: "max-content"}}>
+          {groupedDuplicates.map((group, i) => {
+            return (
+              <DuplicatesRow
+                group={group}
+                parentRef={parentRef}
+                rows={rows}
+                isFirstGroup={i === 0}
+              />
+            );
+          })}
+        </div>
+      </Scrollbar>
+    </DuplicatesContainer>
   );
 };
+
+const DuplicatesContainer = styled.div`
+  display: flex;
+  height: 100vh;
+  position: relative;
+  min-width: 100%;
+`;
