@@ -18,4 +18,11 @@
       "@emotion/react/types/css-prop"
     ],
   },
+  "exclude": [
+    "vite.config.ts",
+    "vite.config.js",
+    "eslint.config.*",
+    "node_modules",
+    "dist"
+  ]
 }
