@@ -1,15 +1,15 @@
-import styled from "styled-components";
-import {useGlobalStore} from "../store/global/GlobalStore";
-import {GENERIC_FIELDS_IDS, ORTHRUS_FIELDS_IDS} from "../config/consts";
-import {capitalizeWords} from "../utils/previewUtils";
-import type {PreviewTableRow} from "../types/previewTableTypes";
-import {useState, useEffect} from "react";
-import {useInteractionStore} from "../store/interaction/InteractionStore";
-import {useValidationMessages} from "../hooks/columnMapping/useValidationMessages";
 import {css} from "@emotion/react";
+import {capitalizeWords} from "../../utils/previewUtils";
+import styled from "styled-components";
+import {DeviceWidth} from "../../hooks/useGetDeviceSize";
+import {useValidationMessages} from "../../hooks/columnMapping/useValidationMessages";
+import {GENERIC_FIELDS_IDS} from "../../config/consts";
+import type {MapColumnsProps} from "./MapColumns";
+import {useGlobalStore} from "../../store/global/GlobalStore";
 
-interface MapColumnsProps {
-  rows: Array<PreviewTableRow>;
+interface MappingViewProps extends MapColumnsProps {
+  fieldMapping: Record<string, string>;
+  handleMappingChange: (genericKey: string, selectedOrthrusKey: string) => void;
 }
 
 const REQUIRED_FIELDS = [
@@ -19,83 +19,24 @@ const REQUIRED_FIELDS = [
   GENERIC_FIELDS_IDS.Email,
 ];
 
-export const MapColumns: React.FC<MapColumnsProps> = ({rows}) => {
+export const MapColumnsDesktop: React.FC<MappingViewProps> = ({rows, fieldMapping, handleMappingChange}) => {
   const columnVisibility = useGlobalStore((s) => s.columnVisibility);
-  const globalFieldMapping = useGlobalStore((s) => s.globalFieldMapping);
-  const csvData = useGlobalStore((s) => s.csvData);
   const genericFields = Object.entries(columnVisibility).filter(([, value]) => !!value);
   const sortedOrthrus = genericFields.map(([key]) => key.toLocaleLowerCase().replace(" ", "_"));
-
   const {getValidationMessage} = useValidationMessages();
-
-  const [fieldMapping, setFieldMapping] = useState<Record<string, string>>(
-    globalFieldMapping && Object.keys(globalFieldMapping).length > 0
-      ? globalFieldMapping
-      : Object.fromEntries(genericFields.map(([key]) => [key, key]))
-  );
-
-  const handleMappingChange = (genericKey: string, selectedOrthrusKey: string) => {
-    setFieldMapping((prev) => ({
-      ...prev,
-      [genericKey]: selectedOrthrusKey,
-    }));
-  };
-
-  useEffect(() => {
-    useGlobalStore.setState((s) => ({
-      ...s,
-      globalFieldMapping: fieldMapping,
-    }));
-  }, [fieldMapping]);
-
-  const editedData = csvData.map((row) =>
-    Object.fromEntries(
-      Object.entries(row)
-        .filter(([key]) => key !== GENERIC_FIELDS_IDS.Address && key !== GENERIC_FIELDS_IDS.JobTitle)
-        .map(([key, value]) => {
-          const mappedKey =
-            fieldMapping[key] && fieldMapping[key] !== "Ignore"
-              ? ORTHRUS_FIELDS_IDS[fieldMapping[key] as keyof typeof ORTHRUS_FIELDS_IDS] || fieldMapping[key]
-              : key;
-          return [mappedKey, value];
-        })
-    )
-  );
-
-  // unused for now
-  console.log(editedData);
-
-  const mappedValues = Object.values(fieldMapping).filter((v) => v !== "Ignore");
-  const uniqueMappedValues = new Set(mappedValues);
-
-  const allGenericKeysChanged =
-    genericFields.filter(([key]) => fieldMapping[key] !== "Ignore").every(([key]) => fieldMapping[key] && fieldMapping[key] !== key) &&
-    uniqueMappedValues.size === mappedValues.length;
-
-  const allRequiredFieldsMapped = REQUIRED_FIELDS.every(
-    (reqKey) => fieldMapping[reqKey] && fieldMapping[reqKey] !== reqKey && fieldMapping[reqKey] !== "Ignore"
-  );
-
-  const allKeysChanged = allGenericKeysChanged && allRequiredFieldsMapped;
 
   const validationMessage = getValidationMessage(fieldMapping, genericFields, REQUIRED_FIELDS);
 
-  useEffect(() => {
-    if (allKeysChanged) {
-      useInteractionStore.setState((s) => ({
-        ...s,
-        isMappingDone: true,
-      }));
-    } else {
-      useInteractionStore.setState((s) => ({
-        ...s,
-        isMappingDone: false,
-      }));
-    }
-  }, [allKeysChanged]);
-
   return (
-    <MapColumnsContainer>
+    <MapColumnsContainer
+      css={css`
+        display: none;
+
+        @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+          display: flex;
+        }
+      `}
+    >
       {validationMessage && <div style={{color: "#ba2525", marginBottom: "10px"}}>{validationMessage}</div>}
       <div style={{display: "flex", gap: "20px"}}>
         <MappingColumn>
@@ -160,14 +101,27 @@ export const MapColumns: React.FC<MapColumnsProps> = ({rows}) => {
   );
 };
 
-const MapColumnsContainer = styled.div`
+export const MapColumnsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 30px;
+  padding: 10px;
   background: rgb(121, 176, 106);
   border-radius: 15px;
+  border: 5px solid rgb(19, 151, 161);
+  font-size: 14px;
+
+  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+    font-size: 16px;
+    padding: 20px;
+    border: 10px solid rgb(19, 151, 161);
+  }
+
+  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
+    padding: 30px;
+    border: 15px solid rgb(19, 151, 161);
+  }
 `;
 
 const MappingColumn = styled.div`
@@ -179,34 +133,65 @@ const MappingColumn = styled.div`
 `;
 
 const OriginalRow = styled.div`
-  min-width: 120px;
   text-align: left;
   display: flex;
   align-items: center;
   height: 25px;
+  width: 105px;
+
+  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+  }
+
+  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
+    min-width: 120px;
+  }
 `;
 
 const OrthrusContainer = styled.div`
-  min-width: 125px;
+  width: 105px;
   height: 25px;
   display: flex;
   align-items: center;
+
+  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+  }
+
+  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
+    min-width: 125px;
+  }
 `;
 
 const SampleValue = styled.div`
-  min-width: 430px;
+  width: 130px;
   text-align: left;
   height: 25px;
-  display: flex;
-  align-items: center;
+  line-height: 25px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+    width: 400px;
+  }
+
+  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
+    min-width: 430px;
+  }
 `;
 
-const StyledSelect = styled.select`
-  min-width: 125px;
+export const StyledSelect = styled.select`
+  width: 105px;
   height: 25px;
   background: limegreen;
   border: none;
   padding: 0 10px;
   border-radius: 7px;
   cursor: pointer;
+
+  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+  }
+
+  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
+    min-width: 125px;
+  }
 `;

@@ -97,6 +97,7 @@ const TableContainer = styled.div`
   overflow: hidden;
   background: rgb(121, 176, 106);
   border-radius: 15px;
+  border: 15px solid rgb(19, 151, 161);
 `;
 
 const RowContainer = styled.div`

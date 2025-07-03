@@ -6,7 +6,7 @@ import {usePreviewColumnDefinitions} from "../hooks/previewTable/usePreviewColum
 import {isEmpty} from "lodash-es";
 import {TableControls} from "./TableControls";
 import {PreviewTable} from "./PreviewTable/PreviewTable";
-import {MapColumns} from "./MapColumns";
+import {MapColumns} from "./MapColumns/MapColumns";
 import {TableFilters} from "./TableFilters";
 import {DuplicatesTable} from "./DuplicateEntries/DuplicatesTable";
 
