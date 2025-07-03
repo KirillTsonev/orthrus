@@ -33,7 +33,12 @@ export const DuplicatesRow: React.FC<DuplicatesRowProps> = ({group, parentRef, r
         margin-top: ${isFirstGroup ? "20px" : "0px"};
       `}
     >
-      {isFirstGroup && <TableRow row={rows[0]} />}
+      {isFirstGroup && (
+        <TableRow
+          row={rows[0]}
+          idx={1}
+        />
+      )}
       <GroupContainer
         css={css`
           height: ${group.length * DUPLICATE_ROW_HEIGHT + 30}px;
@@ -60,6 +65,7 @@ export const DuplicatesRow: React.FC<DuplicatesRowProps> = ({group, parentRef, r
                 <TableRow
                   key={virtualRow.index}
                   row={row}
+                  idx={i}
                 />
               </RowContainer>
             );
@@ -129,10 +135,10 @@ const GroupContainer = styled.div`
   padding-top: 10px;
   transition: background 0.3s;
   border-radius: 10px;
-  background: rgb(62, 161, 5);
+  background: orange;
 
   &:hover {
-    background: limegreen;
+    background: rgb(195, 111, 39);
   }
 `;
 

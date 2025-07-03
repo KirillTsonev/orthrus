@@ -4,11 +4,11 @@ import {useMemo, useRef} from "react";
 import styled from "styled-components";
 import {usePreviewColumnDefinitions} from "../hooks/previewTable/usePreviewColumnDefinitions";
 import {isEmpty} from "lodash-es";
-import {TableControls} from "./TableControls";
 import {PreviewTable} from "./PreviewTable/PreviewTable";
 import {MapColumns} from "./MapColumns/MapColumns";
 import {DuplicatesTable} from "./DuplicateEntries/DuplicatesTable";
 import {TableNavigation} from "./TableNavigation";
+import {FinalizeButton} from "./FinalizeButton";
 
 export const CsvPreview = () => {
   const csvDataToDisplay = useGlobalStore((s) => s.csvDataToDisplay);
@@ -46,7 +46,7 @@ export const CsvPreview = () => {
   return (
     <TableContainer ref={parentRef}>
       <TableNavigation />
-      {currentTable === CURRENT_TABLE.Preview && <TableControls />}
+      <FinalizeButton />
       {currentTable === CURRENT_TABLE.Preview && (
         <PreviewTable
           rows={rows}

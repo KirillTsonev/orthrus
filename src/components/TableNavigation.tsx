@@ -6,6 +6,7 @@ import {isEmpty} from "lodash-es";
 
 export const TableNavigation = () => {
   const csvData = useGlobalStore((s) => s.csvData);
+  const currentTable = useGlobalStore((s) => s.currentTable);
   const {findDuplicates} = useValidateTable();
   const duplicates = findDuplicates(csvData);
   const duplicatedData = csvData.filter((_, index) => duplicates.includes(index));
@@ -13,7 +14,8 @@ export const TableNavigation = () => {
 
   return (
     <NavigationContainer>
-      <button
+      <NavigationButtons
+        isActive={currentTable === CURRENT_TABLE.Preview}
         onClick={() => {
           useGlobalStore.setState((s) => ({
             ...s,
@@ -23,9 +25,10 @@ export const TableNavigation = () => {
         }}
       >
         Preview table
-      </button>
+      </NavigationButtons>
       {!noDuplicates && (
-        <button
+        <NavigationButtons
+          isActive={currentTable === CURRENT_TABLE.Duplicates}
           onClick={() => {
             useGlobalStore.setState((s) => ({
               ...s,
@@ -35,9 +38,10 @@ export const TableNavigation = () => {
           }}
         >
           Duplicates
-        </button>
+        </NavigationButtons>
       )}
-      <button
+      <NavigationButtons
+        isActive={currentTable === CURRENT_TABLE.Mapping}
         onClick={() => {
           useInteractionStore.setState((s) => ({
             ...s,
@@ -50,7 +54,7 @@ export const TableNavigation = () => {
         }}
       >
         Column mapping
-      </button>
+      </NavigationButtons>
     </NavigationContainer>
   );
 };
@@ -58,4 +62,15 @@ export const TableNavigation = () => {
 const NavigationContainer = styled.div`
   display: flex;
   gap: 20px;
+  padding: 10px 0;
+`;
+
+const NavigationButtons = styled.button<{isActive: boolean}>`
+  border: 10px solid rgb(11, 192, 205);
+  background: ${({isActive}) => (isActive ? "rgb(11, 192, 205)" : "white")};
+  padding: 20px;
+
+  &:hover {
+    background: rgb(11, 192, 205);
+  }
 `;

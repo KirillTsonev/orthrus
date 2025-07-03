@@ -7,7 +7,7 @@ export const UploadModal = () => {
   const totalRowsNumber = useGlobalStore((s) => s.totalRowsNumber);
 
   return (
-    <div>
+    <div style={{zIndex: 99999}}>
       {isUploadModalOpen && (
         <div
           style={{

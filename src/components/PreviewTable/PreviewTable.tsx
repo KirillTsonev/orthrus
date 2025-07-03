@@ -8,6 +8,7 @@ import styled from "styled-components";
 import {TableFilters} from "../../components/TableFilters";
 import {useFilterData} from "../../hooks/previewTable/useFilterData";
 import {fadeIn} from "../../config/animations";
+import {TableControls} from "./TableControls";
 
 interface PreviewTableProps {
   rows: Array<PreviewTableRow>;
@@ -26,7 +27,12 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({rows, parentRef}) => 
 
   return (
     <MainContainer>
-      {!noErrors && <TableFilters />}
+      {!noErrors && (
+        <div style={{display: "flex", position: "relative"}}>
+          <TableFilters />
+          <TableControls />
+        </div>
+      )}
       <TableContainer
         css={css`
           height: ${rowVirtualizer.getTotalSize() + rows.length * 5 + 20}px;

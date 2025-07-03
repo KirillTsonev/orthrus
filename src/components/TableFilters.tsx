@@ -1,13 +1,11 @@
 import styled from "styled-components";
 import {useGlobalStore, CURRENT_TABLE, CURRENT_FILTER} from "../store/global/GlobalStore";
-import {useInteractionStore} from "../store/interaction/InteractionStore";
 import {css} from "@emotion/react";
 import {useFilterData} from "../hooks/previewTable/useFilterData";
 import {slideUp, fadeIn} from "../config/animations";
 
 export const TableFilters = () => {
   const currentFilter = useGlobalStore((s) => s.currentFilter);
-  // const isMappingDone = useInteractionStore((s) => s.isMappingDone);
   const csvData = useGlobalStore((s) => s.csvData);
   const {cleanData, errorData, noErrors, noDuplicates} = useFilterData();
 
@@ -101,23 +99,21 @@ export const TableFilters = () => {
           </>
         )}
       </div>
-      {/* <button
-        disabled={!noDuplicates || !noErrors || !isMappingDone}
-        style={{padding: "10px", margin: "10px 0"}}
-        onClick={() => {
-          useInteractionStore.setState((s) => ({
-            ...s,
-            isUploadModalOpen: true,
-          }));
-        }}
-      >
-        Finish CSV upload
-      </button> */}
     </FiltersContainer>
   );
 };
 
-const FilterButton = styled.div`
+const FiltersContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px 10px 0 40px;
+  background: white;
+  position: absolute;
+  top: 0px;
+`;
+
+export const FilterButton = styled.div`
   padding: 10px 20px;
   border-top: 5px solid rgb(19, 151, 161);
   border-right: 5px solid rgb(19, 151, 161);
@@ -131,14 +127,4 @@ const FilterButton = styled.div`
   &:hover {
     transform: translateY(-10px);
   }
-`;
-
-const FiltersContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 10px 10px 0 40px;
-  background: white;
-  position: absolute;
-  top: 0px;
 `;
