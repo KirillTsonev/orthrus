@@ -1,5 +1,6 @@
 import {useGlobalStore} from "../../store/global/GlobalStore";
 import type {PreviewTableRow} from "types/previewTableTypes";
+import styled from "styled-components";
 
 interface DuplicateControlsProps {
   group: Array<PreviewTableRow>;
@@ -10,9 +11,8 @@ export const DuplicateControls: React.FC<DuplicateControlsProps> = ({group, setI
   const csvData = useGlobalStore((s) => s.csvData);
 
   return (
-    <div style={{height: "20px", display: "flex", gap: "10px", justifyContent: "center"}}>
-      <button
-        style={{padding: "0 10px"}}
+    <ControlsContainer>
+      <ControlsButton
         onClick={() => {
           const notFirstRows = group.slice(1).map((row) => row.original.index);
           const filteredCsv = csvData.filter((data) => !notFirstRows.includes(data["index"]));
@@ -25,9 +25,8 @@ export const DuplicateControls: React.FC<DuplicateControlsProps> = ({group, setI
         }}
       >
         Keep first row
-      </button>
-      <button
-        style={{padding: "0 10px"}}
+      </ControlsButton>
+      <ControlsButton
         onClick={() => {
           const notLastRows = group.slice(0, -1).map((row) => row.original.index);
           const filteredCsv = csvData.filter((data) => !notLastRows.includes(data["index"]));
@@ -40,15 +39,9 @@ export const DuplicateControls: React.FC<DuplicateControlsProps> = ({group, setI
         }}
       >
         Keep last row
-      </button>
-      <button
-        style={{padding: "0 10px"}}
-        onClick={setIsMergingManually}
-      >
-        Merge manually
-      </button>
-      <button
-        style={{padding: "0 10px"}}
+      </ControlsButton>
+      <ControlsButton onClick={setIsMergingManually}>Merge manually</ControlsButton>
+      <ControlsButton
         onClick={() => {
           const duplicatedRows = group.map((row) => row.original.index);
           const filteredCsv = csvData.filter((data) => !duplicatedRows.includes(data["index"]));
@@ -61,7 +54,19 @@ export const DuplicateControls: React.FC<DuplicateControlsProps> = ({group, setI
         }}
       >
         Delete duplicates
-      </button>
-    </div>
+      </ControlsButton>
+    </ControlsContainer>
   );
 };
+
+const ControlsContainer = styled.div`
+  height: 30px;
+  display: flex;
+  gap: 10px;
+  justify-content: left;
+  padding-left: 20px;
+`;
+
+const ControlsButton = styled.button`
+  padding: 0 10px;
+`;

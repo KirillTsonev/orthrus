@@ -5,6 +5,7 @@ import {Scrollbar} from "react-scrollbars-custom";
 import {DuplicatesRow} from "./DuplicatesRow";
 import {useEffect} from "react";
 import {useGlobalStore, CURRENT_TABLE} from "../../store/global/GlobalStore";
+import {css} from "@emotion/react";
 
 interface DuplicatesTableProps {
   rows: Array<PreviewTableRow>;
@@ -20,7 +21,11 @@ export const DuplicatesTable: React.FC<DuplicatesTableProps> = ({rows, parentRef
   }, [groupedDuplicates]);
 
   return (
-    <DuplicatesContainer>
+    <DuplicatesContainer
+      css={css`
+        height: ${groupedDuplicates.length * DUPLICATE_ROW_HEIGHT + HEADER_ROW_HEIGHT}px;
+      `}
+    >
       <Scrollbar
         style={{height: "100%", width: "100%"}}
         trackXProps={{
@@ -37,7 +42,7 @@ export const DuplicatesTable: React.FC<DuplicatesTableProps> = ({rows, parentRef
                   bottom: "auto",
                   position: "absolute",
                   height: 15,
-                  background: "#eee",
+                  background: "pink",
                 }}
               />
             );
@@ -62,9 +67,14 @@ export const DuplicatesTable: React.FC<DuplicatesTableProps> = ({rows, parentRef
   );
 };
 
+const DUPLICATE_ROW_HEIGHT = 154;
+const HEADER_ROW_HEIGHT = 90;
+
 const DuplicatesContainer = styled.div`
   display: flex;
-  height: 100vh;
   position: relative;
-  min-width: 100%;
+  min-width: calc(100% - 30px);
+  background: rgb(121, 176, 106);
+  border-radius: 15px;
+  border: 15px solid rgb(19, 151, 161);
 `;

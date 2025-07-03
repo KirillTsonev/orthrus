@@ -139,9 +139,6 @@ const OriginalRow = styled.div`
   height: 25px;
   width: 105px;
 
-  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
-  }
-
   @media screen and (min-width: ${DeviceWidth.Desktop}px) {
     min-width: 120px;
   }
@@ -152,9 +149,6 @@ const OrthrusContainer = styled.div`
   height: 25px;
   display: flex;
   align-items: center;
-
-  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
-  }
 
   @media screen and (min-width: ${DeviceWidth.Desktop}px) {
     min-width: 125px;
@@ -182,14 +176,11 @@ const SampleValue = styled.div`
 export const StyledSelect = styled.select`
   width: 105px;
   height: 25px;
-  background: limegreen;
+  background: rgb(11, 192, 205);
   border: none;
   padding: 0 10px;
   border-radius: 7px;
   cursor: pointer;
-
-  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
-  }
 
   @media screen and (min-width: ${DeviceWidth.Desktop}px) {
     min-width: 125px;

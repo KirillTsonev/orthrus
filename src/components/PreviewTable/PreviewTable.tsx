@@ -92,10 +92,11 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({rows, parentRef}) => 
 const TableContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 100%;
+  min-width: calc(100% - 30px);
+  max-width: 100vw;
   position: relative;
   overflow: hidden;
-  background: rgb(121, 176, 106);
+  background: rgb(63, 124, 45);
   border-radius: 15px;
   border: 15px solid rgb(19, 151, 161);
 `;
@@ -107,6 +108,7 @@ const RowContainer = styled.div`
   min-width: 100%;
   transition: background 0.3s;
   border-radius: 10px;
+  background: rgb(90, 181, 37);
 
   &:hover {
     background: limegreen;

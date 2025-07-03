@@ -28,11 +28,16 @@ export const DuplicatesRow: React.FC<DuplicatesRowProps> = ({group, parentRef, r
   });
 
   return (
-    <div style={{marginTop: "20px"}}>
+    <div
+      css={css`
+        margin-top: ${isFirstGroup ? "20px" : "0px"};
+      `}
+    >
       {isFirstGroup && <TableRow row={rows[0]} />}
       <GroupContainer
         css={css`
-          height: ${group.length * DUPLICATE_ROW_HEIGHT + 20}px;
+          height: ${group.length * DUPLICATE_ROW_HEIGHT + 30}px;
+          top: ${isFirstGroup ? "0" : "20px"};
         `}
       >
         <DuplicateControls
@@ -42,7 +47,7 @@ export const DuplicatesRow: React.FC<DuplicatesRowProps> = ({group, parentRef, r
         {!isMergingManually &&
           rowVirtualizer.getVirtualItems().map((virtualRow, i) => {
             const row = group[virtualRow.index];
-            const offset = DUPLICATE_ROW_HEIGHT * i + 20;
+            const offset = DUPLICATE_ROW_HEIGHT * i + 30;
 
             return (
               <RowContainer
@@ -69,7 +74,7 @@ export const DuplicatesRow: React.FC<DuplicatesRowProps> = ({group, parentRef, r
                     key={field}
                     style={{marginBottom: "8px"}}
                   >
-                    <select
+                    <StyledDuplicateSelect
                       value={newRow[field] ?? group[0].original[field]}
                       onChange={(e) =>
                         setNewRow((prev) => ({
@@ -87,7 +92,7 @@ export const DuplicatesRow: React.FC<DuplicatesRowProps> = ({group, parentRef, r
                           {row.original[field]}
                         </option>
                       ))}
-                    </select>
+                    </StyledDuplicateSelect>
                   </div>
                 ))}
             </div>
@@ -114,14 +119,21 @@ export const DuplicatesRow: React.FC<DuplicatesRowProps> = ({group, parentRef, r
   );
 };
 
+const DUPLICATE_ROW_HEIGHT = 50;
+
 const GroupContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  top: 20px;
   width: auto;
-  border: solid 2px red;
   padding-top: 10px;
+  transition: background 0.3s;
+  border-radius: 10px;
+  background: rgb(62, 161, 5);
+
+  &:hover {
+    background: limegreen;
+  }
 `;
 
 const RowContainer = styled.div`
@@ -131,4 +143,11 @@ const RowContainer = styled.div`
   width: 100%;
 `;
 
-const DUPLICATE_ROW_HEIGHT = 50;
+const StyledDuplicateSelect = styled.select`
+  height: 35px;
+  background: rgb(11, 192, 205);
+  border: none;
+  padding: 5px 20px;
+  border-radius: 7px;
+  cursor: pointer;
+`;
