@@ -19,3 +19,9 @@ const INITIAL_INTERACTION_STORE = {
 export const useInteractionStore = create<IInteractionStore>(() => ({
   ...INITIAL_INTERACTION_STORE,
 }));
+
+export const resetInteractionStore = () => {
+  useInteractionStore.setState(() => ({
+    ...INITIAL_INTERACTION_STORE,
+  }));
+};

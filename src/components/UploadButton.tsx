@@ -1,4 +1,5 @@
-import {useGlobalStore} from "../store/global/GlobalStore";
+import {useGlobalStore, resetGlobalStore} from "../store/global/GlobalStore";
+import {resetInteractionStore} from "../store/interaction/InteractionStore";
 import {useCSVReader} from "react-papaparse";
 import {csvArrayToObjects} from "../utils/previewUtils";
 import styled from "styled-components";
@@ -18,6 +19,9 @@ export const UploadButton = () => {
   return (
     <CSVReader
       onUploadAccepted={(results: ParseResults) => {
+        resetGlobalStore();
+        resetInteractionStore();
+
         const csvObjects = csvArrayToObjects(results.data);
         const columnVisibility = Object.keys(csvObjects[0] || {}).reduce<Record<string, boolean>>((acc, key) => {
           if (key === "index") acc["0"] = false;

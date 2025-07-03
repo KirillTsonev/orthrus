@@ -6,6 +6,7 @@ import {useValidationMessages} from "../../hooks/columnMapping/useValidationMess
 import {GENERIC_FIELDS_IDS} from "../../config/consts";
 import type {MapColumnsProps} from "./MapColumns";
 import {useGlobalStore} from "../../store/global/GlobalStore";
+import {slideRight} from "../../config/animations";
 
 interface MappingViewProps extends MapColumnsProps {
   fieldMapping: Record<string, string>;
@@ -48,8 +49,19 @@ export const MapColumnsDesktop: React.FC<MappingViewProps> = ({rows, fieldMappin
           >
             Original header
           </OriginalRow>
-          {genericFields.map(([key]) => {
-            return <OriginalRow>{capitalizeWords(key)}</OriginalRow>;
+          {genericFields.map(([key], idx) => {
+            return (
+              <OriginalRow
+                css={css`
+                  animation: ${slideRight} 0.3s linear 1;
+                  animation-delay: ${0.15 + idx * 0.1}s;
+                  animation-fill-mode: both;
+                `}
+                key={key}
+              >
+                {capitalizeWords(key)}
+              </OriginalRow>
+            );
           })}
         </MappingColumn>
         <MappingColumn>
@@ -61,13 +73,19 @@ export const MapColumnsDesktop: React.FC<MappingViewProps> = ({rows, fieldMappin
           >
             Orthrus field
           </OrthrusContainer>
-          {genericFields.map(([key]) => {
+          {genericFields.map(([key], idx) => {
             return (
               <StyledSelect
                 name="orthrus-column-mapping"
                 id="orthrus-column-mapping"
                 value={fieldMapping[key] || ""}
                 onChange={(e) => handleMappingChange(key, e.target.value)}
+                key={key}
+                css={css`
+                  animation: ${slideRight} 0.3s linear 1;
+                  animation-delay: ${0.15 + idx * 0.1}s;
+                  animation-fill-mode: both;
+                `}
               >
                 <option value="">-- Select --</option>
                 {sortedOrthrus.map((orthKey) => (
@@ -92,8 +110,19 @@ export const MapColumnsDesktop: React.FC<MappingViewProps> = ({rows, fieldMappin
           >
             Sample value
           </SampleValue>
-          {genericFields.map(([key]) => {
-            return <SampleValue>{rows[rows.length - 1]?.original[key]}</SampleValue>;
+          {genericFields.map(([key], idx) => {
+            return (
+              <SampleValue
+                css={css`
+                  animation: ${slideRight} 0.3s linear 1;
+                  animation-delay: ${0.15 + idx * 0.1}s;
+                  animation-fill-mode: both;
+                `}
+                key={key}
+              >
+                {rows[rows.length - 1]?.original[key]}
+              </SampleValue>
+            );
           })}
         </MappingColumn>
       </div>

@@ -1,4 +1,4 @@
-import {useGlobalStore} from "../store/global/GlobalStore";
+import {useGlobalStore, CURRENT_TABLE} from "../store/global/GlobalStore";
 import {getCoreRowModel, useReactTable} from "@tanstack/react-table";
 import {useMemo, useRef} from "react";
 import styled from "styled-components";
@@ -7,8 +7,8 @@ import {isEmpty} from "lodash-es";
 import {TableControls} from "./TableControls";
 import {PreviewTable} from "./PreviewTable/PreviewTable";
 import {MapColumns} from "./MapColumns/MapColumns";
-import {TableFilters} from "./TableFilters";
 import {DuplicatesTable} from "./DuplicateEntries/DuplicatesTable";
+import {TableNavigation} from "./TableNavigation";
 
 export const CsvPreview = () => {
   const csvDataToDisplay = useGlobalStore((s) => s.csvDataToDisplay);
@@ -45,16 +45,16 @@ export const CsvPreview = () => {
 
   return (
     <TableContainer ref={parentRef}>
-      <TableControls />
-      <TableFilters />
-      {currentTable === "preview" && (
+      <TableNavigation />
+      {currentTable === CURRENT_TABLE.Preview && <TableControls />}
+      {currentTable === CURRENT_TABLE.Preview && (
         <PreviewTable
           rows={rows}
           parentRef={parentRef}
         />
       )}
-      {currentTable === "mapping" && <MapColumns rows={rows} />}
-      {currentTable === "duplicates" && (
+      {currentTable === CURRENT_TABLE.Mapping && <MapColumns rows={rows} />}
+      {currentTable === CURRENT_TABLE.Duplicates && (
         <DuplicatesTable
           rows={rows}
           parentRef={parentRef}

@@ -37,3 +37,9 @@ const INITIAL_GLOBAL_STORE = {
 };
 
 export const useGlobalStore = create<IGlobalStore>(() => ({...INITIAL_GLOBAL_STORE}));
+
+export const resetGlobalStore = () => {
+  useGlobalStore.setState(() => ({
+    ...INITIAL_GLOBAL_STORE,
+  }));
+};

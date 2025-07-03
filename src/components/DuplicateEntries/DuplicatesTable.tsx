@@ -6,6 +6,7 @@ import {DuplicatesRow} from "./DuplicatesRow";
 import {useEffect} from "react";
 import {useGlobalStore, CURRENT_TABLE} from "../../store/global/GlobalStore";
 import {css} from "@emotion/react";
+import {fadeIn} from "../../config/animations";
 
 interface DuplicatesTableProps {
   rows: Array<PreviewTableRow>;
@@ -28,6 +29,9 @@ export const DuplicatesTable: React.FC<DuplicatesTableProps> = ({rows, parentRef
     >
       <Scrollbar
         style={{height: "100%", width: "100%"}}
+        css={css`
+          animation: ${fadeIn} 0.5s linear 1;
+        `}
         trackXProps={{
           renderer: (props) => {
             const {elementRef, style, ...restProps} = props;

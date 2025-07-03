@@ -1,43 +1,25 @@
 import styled from "styled-components";
 import {useGlobalStore, CURRENT_TABLE, CURRENT_FILTER} from "../store/global/GlobalStore";
-import {useValidateTable} from "../hooks/previewTable/useValidateTable";
-import {GENERIC_FIELDS_IDS} from "../config/consts";
-import {isEmpty} from "lodash-es";
 import {useInteractionStore} from "../store/interaction/InteractionStore";
-
-const columnToFieldId: Record<string, GENERIC_FIELDS_IDS> = {
-  "First Name": GENERIC_FIELDS_IDS.FirstName,
-  "last Name": GENERIC_FIELDS_IDS.LastName,
-  "Job  Title": GENERIC_FIELDS_IDS.JobTitle,
-  Address: GENERIC_FIELDS_IDS.Address,
-  Email: GENERIC_FIELDS_IDS.Email,
-  Company: GENERIC_FIELDS_IDS.Company,
-  "Pipeline Stage": GENERIC_FIELDS_IDS.PipelineStage,
-  "Phone Number": GENERIC_FIELDS_IDS.PhoneNumber,
-};
+import {css} from "@emotion/react";
+import {useFilterData} from "../hooks/previewTable/useFilterData";
+import {slideUp, fadeIn} from "../config/animations";
 
 export const TableFilters = () => {
-  const csvData = useGlobalStore((s) => s.csvData);
   const currentFilter = useGlobalStore((s) => s.currentFilter);
-  const isMappingDone = useInteractionStore((s) => s.isMappingDone);
-  const {validateCell, findDuplicates} = useValidateTable();
-  const duplicates = findDuplicates(csvData);
-  const cleanData = csvData
-    .slice(1)
-    .filter((row) => Object.entries(columnToFieldId).every(([col, fieldId]) => validateCell(row[col], fieldId)));
-  const errorData = csvData
-    .slice(1)
-    .filter((row) => Object.entries(columnToFieldId).some(([col, fieldId]) => !validateCell(row[col], fieldId)));
-  const duplicatedData = csvData.filter((_, index) => duplicates.includes(index));
-
-  const noErrors = isEmpty(errorData);
-  const noDuplicates = isEmpty(duplicates);
+  // const isMappingDone = useInteractionStore((s) => s.isMappingDone);
+  const csvData = useGlobalStore((s) => s.csvData);
+  const {cleanData, errorData, noErrors, noDuplicates} = useFilterData();
 
   return (
-    <FiltersContainer>
-      <div style={{display: "flex", gap: "20px", justifyContent: "center"}}>
+    <FiltersContainer
+      css={css`
+        animation: ${fadeIn} 0.5s linear 1;
+      `}
+    >
+      <div style={{display: "flex"}}>
         {(!noDuplicates || !noErrors) && (
-          <button
+          <FilterButton
             onClick={() => {
               useGlobalStore.setState((s) => ({
                 ...s,
@@ -46,13 +28,24 @@ export const TableFilters = () => {
                 currentFilter: CURRENT_FILTER.All,
               }));
             }}
+            css={css`
+              z-index: 10;
+              transform: translateY(${currentFilter === CURRENT_FILTER.All ? -10 : 0}px);
+            `}
           >
             All rows
-          </button>
+          </FilterButton>
         )}
         {!noErrors && (
           <>
-            <button
+            <FilterButton
+              css={css`
+                position: relative;
+                left: -10px;
+                top: 2px;
+                z-index: 9;
+                transform: translateY(${currentFilter === CURRENT_FILTER.Clean ? -10 : 0}px);
+              `}
               onClick={() => {
                 useGlobalStore.setState((s) => ({
                   ...s,
@@ -63,9 +56,16 @@ export const TableFilters = () => {
               }}
             >
               Clean rows
-            </button>
+            </FilterButton>
             <div style={{display: "flex", gap: "5px"}}>
-              <button
+              <FilterButton
+                css={css`
+                  position: relative;
+                  left: -20px;
+                  top: 4px;
+                  z-index: 5;
+                  transform: translateY(${currentFilter === CURRENT_FILTER.Problem ? -10 : 0}px);
+                `}
                 onClick={() => {
                   useGlobalStore.setState((s) => ({
                     ...s,
@@ -76,9 +76,12 @@ export const TableFilters = () => {
                 }}
               >
                 Rows with issues
-              </button>
+              </FilterButton>
               {currentFilter === CURRENT_FILTER.Problem && (
-                <button
+                <FilterButton
+                  css={css`
+                    animation: ${slideUp} 0.1s linear 1;
+                  `}
                   onClick={() => {
                     const errorRows = errorData.map((data) => data.index);
                     const filteredData = csvData.filter((data) => !errorRows.includes(data.index));
@@ -92,26 +95,13 @@ export const TableFilters = () => {
                   }}
                 >
                   Delete all rows with issues
-                </button>
+                </FilterButton>
               )}
             </div>
           </>
         )}
-        {!noDuplicates && (
-          <button
-            onClick={() => {
-              useGlobalStore.setState((s) => ({
-                ...s,
-                csvDataToDisplay: csvData.slice(0, 1).concat(duplicatedData),
-                currentTable: CURRENT_TABLE.Duplicates,
-              }));
-            }}
-          >
-            Duplicates
-          </button>
-        )}
       </div>
-      <button
+      {/* <button
         disabled={!noDuplicates || !noErrors || !isMappingDone}
         style={{padding: "10px", margin: "10px 0"}}
         onClick={() => {
@@ -122,14 +112,33 @@ export const TableFilters = () => {
         }}
       >
         Finish CSV upload
-      </button>
+      </button> */}
     </FiltersContainer>
   );
 };
+
+const FilterButton = styled.div`
+  padding: 10px 20px;
+  border-top: 5px solid rgb(19, 151, 161);
+  border-right: 5px solid rgb(19, 151, 161);
+  border-left: 5px solid rgb(19, 151, 161);
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: white;
+  height: 50px;
+
+  &:hover {
+    transform: translateY(-10px);
+  }
+`;
 
 const FiltersContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 10px;
+  padding: 10px 10px 0 40px;
+  background: white;
+  position: absolute;
+  top: 0px;
 `;
