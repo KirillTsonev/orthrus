@@ -3,6 +3,7 @@ import {useGlobalStore, CURRENT_TABLE, CURRENT_FILTER} from "../store/global/Glo
 import {css} from "@emotion/react";
 import {useFilterData} from "../hooks/previewTable/useFilterData";
 import {slideUp, fadeIn} from "../config/animations";
+import {DeviceWidth} from "../hooks/useGetDeviceSize";
 
 export const TableFilters = () => {
   const currentFilter = useGlobalStore((s) => s.currentFilter);
@@ -15,7 +16,17 @@ export const TableFilters = () => {
         animation: ${fadeIn} 0.5s linear 1;
       `}
     >
-      <div style={{display: "flex"}}>
+      <div
+        css={css`
+          display: flex;
+          justify-content: space-between;
+          padding: 10px 20px;
+
+          @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+            padding: 0;
+          }
+        `}
+      >
         {(!noDuplicates || !noErrors) && (
           <FilterButton
             onClick={() => {
@@ -27,8 +38,10 @@ export const TableFilters = () => {
               }));
             }}
             css={css`
-              z-index: 10;
-              transform: translateY(${currentFilter === CURRENT_FILTER.All ? -10 : 0}px);
+              @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+                z-index: 10;
+                transform: translateY(${currentFilter === CURRENT_FILTER.All ? -10 : 0}px);
+              }
             `}
           >
             All rows
@@ -38,11 +51,13 @@ export const TableFilters = () => {
           <>
             <FilterButton
               css={css`
-                position: relative;
-                left: -10px;
-                top: 2px;
-                z-index: 9;
-                transform: translateY(${currentFilter === CURRENT_FILTER.Clean ? -10 : 0}px);
+                @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+                  position: relative;
+                  left: -10px;
+                  top: 2px;
+                  z-index: 9;
+                  transform: translateY(${currentFilter === CURRENT_FILTER.Clean ? -10 : 0}px);
+                }
               `}
               onClick={() => {
                 useGlobalStore.setState((s) => ({
@@ -55,14 +70,27 @@ export const TableFilters = () => {
             >
               Clean rows
             </FilterButton>
-            <div style={{display: "flex", gap: "5px"}}>
+            <div
+              style={{display: "flex", gap: "5px"}}
+              css={css`
+                display: flex;
+                gap: 5px;
+                flex-direction: column;
+
+                @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+                  flex-direction: row;
+                }
+              `}
+            >
               <FilterButton
                 css={css`
-                  position: relative;
-                  left: -20px;
-                  top: 4px;
-                  z-index: 5;
-                  transform: translateY(${currentFilter === CURRENT_FILTER.Problem ? -10 : 0}px);
+                  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+                    position: relative;
+                    left: -20px;
+                    top: 4px;
+                    z-index: 5;
+                    transform: translateY(${currentFilter === CURRENT_FILTER.Problem ? -10 : 0}px);
+                  }
                 `}
                 onClick={() => {
                   useGlobalStore.setState((s) => ({
@@ -107,24 +135,33 @@ const FiltersContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding: 10px 10px 0 40px;
   background: white;
-  position: absolute;
-  top: 0px;
+  position: relative;
+
+  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+    position: absolute;
+    top: 0px;
+    padding: 10px 10px 0 40px;
+  }
 `;
 
 export const FilterButton = styled.div`
   padding: 10px 20px;
-  border-top: 5px solid rgb(19, 151, 161);
-  border-right: 5px solid rgb(19, 151, 161);
-  border-left: 5px solid rgb(19, 151, 161);
-  border-radius: 10px 10px 0 0;
+  border: 5px solid rgb(19, 151, 161);
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s;
   background: white;
-  height: 50px;
 
-  &:hover {
-    transform: translateY(-10px);
+  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+    height: 50px;
+    border-top: 5px solid rgb(19, 151, 161);
+    border-right: 5px solid rgb(19, 151, 161);
+    border-left: 5px solid rgb(19, 151, 161);
+    border-radius: 10px 10px 0 0;
+
+    &:hover {
+      transform: translateY(-10px);
+    }
   }
 `;

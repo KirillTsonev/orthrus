@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {useInteractionStore} from "../../store/interaction/InteractionStore";
 import {FilterButton} from "../TableFilters";
+import {DeviceWidth} from "../../hooks/useGetDeviceSize";
 
 export const TableControls = () => {
   const isSelectingHeaderRow = useInteractionStore((s) => s.isSelectingHeaderRow);
@@ -36,7 +37,12 @@ const TableControlsContainer = styled.div`
   display: flex;
   gap: 10px;
   padding: 10px;
-  position: absolute;
-  right: 0;
-  padding-right: 20px;
+  position: relative;
+  justify-content: center;
+
+  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+    position: absolute;
+    right: 0;
+    padding-right: 20px;
+  }
 `;

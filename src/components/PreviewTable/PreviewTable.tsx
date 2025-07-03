@@ -9,6 +9,8 @@ import {TableFilters} from "../../components/TableFilters";
 import {useFilterData} from "../../hooks/previewTable/useFilterData";
 import {fadeIn} from "../../config/animations";
 import {TableControls} from "./TableControls";
+import {DeviceWidth} from "../../hooks/useGetDeviceSize";
+import {MobileActions} from "./MobileActions";
 
 interface PreviewTableProps {
   rows: Array<PreviewTableRow>;
@@ -27,12 +29,15 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({rows, parentRef}) => 
 
   return (
     <MainContainer>
-      {!noErrors && (
-        <div style={{display: "flex", position: "relative"}}>
-          <TableFilters />
-          <TableControls />
-        </div>
-      )}
+      <>
+        {!noErrors && (
+          <ActionsContainer>
+            <TableFilters />
+            <TableControls />
+          </ActionsContainer>
+        )}
+        <MobileActions />
+      </>
       <TableContainer
         css={css`
           height: ${rowVirtualizer.getTotalSize() + rows.length * 5 + 20}px;
@@ -125,8 +130,11 @@ const TableContainer = styled.div<{noErrors: boolean}>`
   background: rgb(63, 124, 45);
   border-radius: 15px;
   border: 15px solid rgb(19, 151, 161);
-  top: ${({noErrors}) => (noErrors ? "0px" : "54px")};
-  z-index: 9999;
+
+  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+    top: ${({noErrors}) => (noErrors ? "0px" : "54px")};
+    z-index: 9999;
+  }
 `;
 
 const RowContainer = styled.div`
@@ -140,5 +148,14 @@ const RowContainer = styled.div`
 
   &:hover {
     background: limegreen;
+  }
+`;
+
+const ActionsContainer = styled.div`
+  position: relative;
+  display: none;
+
+  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+    display: flex;
   }
 `;
