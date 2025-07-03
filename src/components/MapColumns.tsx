@@ -6,6 +6,7 @@ import type {PreviewTableRow} from "../types/previewTableTypes";
 import {useState, useEffect} from "react";
 import {useInteractionStore} from "../store/interaction/InteractionStore";
 import {useValidationMessages} from "../hooks/columnMapping/useValidationMessages";
+import {css} from "@emotion/react";
 
 interface MapColumnsProps {
   rows: Array<PreviewTableRow>;
@@ -95,40 +96,66 @@ export const MapColumns: React.FC<MapColumnsProps> = ({rows}) => {
 
   return (
     <MapColumnsContainer>
-      {validationMessage && <div style={{color: "red", marginBottom: "10px"}}>{validationMessage}</div>}
-      <div style={{display: "flex", gap: "10px"}}>
-        <div style={{minWidth: "120px", textAlign: "left"}}>Original header</div>
-        <div style={{minWidth: "125px"}}>Orthrus field</div>
-        <div style={{minWidth: "430px", textAlign: "left"}}>Sample value</div>
+      {validationMessage && <div style={{color: "#ba2525", marginBottom: "10px"}}>{validationMessage}</div>}
+      <div style={{display: "flex", gap: "20px"}}>
+        <MappingColumn>
+          <OriginalRow
+            css={css`
+              text-decoration: underline;
+              font-weight: bold;
+            `}
+          >
+            Original header
+          </OriginalRow>
+          {genericFields.map(([key]) => {
+            return <OriginalRow>{capitalizeWords(key)}</OriginalRow>;
+          })}
+        </MappingColumn>
+        <MappingColumn>
+          <OrthrusContainer
+            css={css`
+              text-decoration: underline;
+              font-weight: bold;
+            `}
+          >
+            Orthrus field
+          </OrthrusContainer>
+          {genericFields.map(([key]) => {
+            return (
+              <StyledSelect
+                name="orthrus-column-mapping"
+                id="orthrus-column-mapping"
+                value={fieldMapping[key] || ""}
+                onChange={(e) => handleMappingChange(key, e.target.value)}
+              >
+                <option value="">-- Select --</option>
+                {sortedOrthrus.map((orthKey) => (
+                  <option
+                    key={orthKey}
+                    value={orthKey}
+                  >
+                    {capitalizeWords(orthKey).replace("_", " ")}
+                  </option>
+                ))}
+                <option>Ignore</option>
+              </StyledSelect>
+            );
+          })}
+        </MappingColumn>
+        <MappingColumn>
+          <SampleValue
+            css={css`
+              text-decoration: underline;
+              font-weight: bold;
+            `}
+          >
+            Sample value
+          </SampleValue>
+          {genericFields.map(([key]) => {
+            return <SampleValue>{rows[rows.length - 1]?.original[key]}</SampleValue>;
+          })}
+        </MappingColumn>
       </div>
-      {genericFields.map(([key]) => {
-        return (
-          <MappingRow key={key}>
-            <div style={{minWidth: "120px", textAlign: "left"}}>{capitalizeWords(key)}</div>
-            <select
-              name="orthrus-column-mapping"
-              id="orthrus-column-mapping"
-              style={{
-                minWidth: "125px",
-              }}
-              value={fieldMapping[key] || ""}
-              onChange={(e) => handleMappingChange(key, e.target.value)}
-            >
-              <option value="">-- Select --</option>
-              {sortedOrthrus.map((orthKey) => (
-                <option
-                  key={orthKey}
-                  value={orthKey}
-                >
-                  {capitalizeWords(orthKey).replace("_", " ")}
-                </option>
-              ))}
-              <option>Ignore</option>
-            </select>
-            <div style={{minWidth: "430px", textAlign: "left"}}>{rows[rows.length - 1]?.original[key]}</div>
-          </MappingRow>
-        );
-      })}
     </MapColumnsContainer>
   );
 };
@@ -138,12 +165,48 @@ const MapColumnsContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 20px 0;
+  padding: 30px;
+  background: rgb(121, 176, 106);
+  border-radius: 15px;
 `;
 
-const MappingRow = styled.div`
+const MappingColumn = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  flex-direction: column;
+`;
+
+const OriginalRow = styled.div`
+  min-width: 120px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  height: 25px;
+`;
+
+const OrthrusContainer = styled.div`
+  min-width: 125px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+`;
+
+const SampleValue = styled.div`
+  min-width: 430px;
+  text-align: left;
+  height: 25px;
+  display: flex;
+  align-items: center;
+`;
+
+const StyledSelect = styled.select`
+  min-width: 125px;
+  height: 25px;
+  background: limegreen;
+  border: none;
+  padding: 0 10px;
+  border-radius: 7px;
+  cursor: pointer;
 `;
