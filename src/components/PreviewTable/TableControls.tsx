@@ -41,8 +41,15 @@ const TableControlsContainer = styled.div`
   justify-content: center;
 
   @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+    width: 50%;
+    margin: 0 auto;
+  }
+
+  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
     position: absolute;
     right: 0;
     padding-right: 20px;
+    width: auto;
+    margin: unset;
   }
 `;

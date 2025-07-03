@@ -33,7 +33,7 @@ export const FinalizeButton = () => {
 const StyledFinalizeButton = styled.button`
   padding: 10px;
   margin: 10px 0;
-  width: 30%;
+  width: 40%;
   height: 50px;
   font-size: 18px;
 `;

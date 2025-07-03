@@ -131,7 +131,7 @@ const TableContainer = styled.div<{noErrors: boolean}>`
   border-radius: 15px;
   border: 15px solid rgb(19, 151, 161);
 
-  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
     top: ${({noErrors}) => (noErrors ? "0px" : "54px")};
     z-index: 9999;
   }
@@ -155,7 +155,7 @@ const ActionsContainer = styled.div`
   position: relative;
   display: none;
 
-  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
     display: flex;
   }
 `;

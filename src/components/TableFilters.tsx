@@ -16,17 +16,7 @@ export const TableFilters = () => {
         animation: ${fadeIn} 0.5s linear 1;
       `}
     >
-      <div
-        css={css`
-          display: flex;
-          justify-content: space-between;
-          padding: 10px 20px;
-
-          @media screen and (min-width: ${DeviceWidth.Tablet}px) {
-            padding: 0;
-          }
-        `}
-      >
+      <FiltersInnerContainer>
         {(!noDuplicates || !noErrors) && (
           <FilterButton
             onClick={() => {
@@ -38,7 +28,7 @@ export const TableFilters = () => {
               }));
             }}
             css={css`
-              @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+              @media screen and (min-width: ${DeviceWidth.Desktop}px) {
                 z-index: 10;
                 transform: translateY(${currentFilter === CURRENT_FILTER.All ? -10 : 0}px);
               }
@@ -51,9 +41,9 @@ export const TableFilters = () => {
           <>
             <FilterButton
               css={css`
-                @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+                @media screen and (min-width: ${DeviceWidth.Desktop}px) {
                   position: relative;
-                  left: -10px;
+                  left: -15px;
                   top: 2px;
                   z-index: 9;
                   transform: translateY(${currentFilter === CURRENT_FILTER.Clean ? -10 : 0}px);
@@ -77,16 +67,16 @@ export const TableFilters = () => {
                 gap: 5px;
                 flex-direction: column;
 
-                @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+                @media screen and (min-width: ${DeviceWidth.Desktop}px) {
                   flex-direction: row;
                 }
               `}
             >
               <FilterButton
                 css={css`
-                  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+                  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
                     position: relative;
-                    left: -20px;
+                    left: -30px;
                     top: 4px;
                     z-index: 5;
                     transform: translateY(${currentFilter === CURRENT_FILTER.Problem ? -10 : 0}px);
@@ -126,7 +116,7 @@ export const TableFilters = () => {
             </div>
           </>
         )}
-      </div>
+      </FiltersInnerContainer>
     </FiltersContainer>
   );
 };
@@ -138,10 +128,28 @@ const FiltersContainer = styled.div`
   background: white;
   position: relative;
 
-  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
     position: absolute;
     top: 0px;
     padding: 10px 10px 0 40px;
+  }
+`;
+
+const FiltersInnerContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10px;
+  gap: 5px;
+
+  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+    width: 50%;
+    margin: 0 auto;
+  }
+
+  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
+    padding: 0;
+    width: auto;
+    margin: unset;
   }
 `;
 
@@ -153,7 +161,7 @@ export const FilterButton = styled.div`
   transition: all 0.3s;
   background: white;
 
-  @media screen and (min-width: ${DeviceWidth.Tablet}px) {
+  @media screen and (min-width: ${DeviceWidth.Desktop}px) {
     height: 50px;
     border-top: 5px solid rgb(19, 151, 161);
     border-right: 5px solid rgb(19, 151, 161);
