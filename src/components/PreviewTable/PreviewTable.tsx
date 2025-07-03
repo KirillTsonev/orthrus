@@ -41,7 +41,7 @@ export const PreviewTable: React.FC<PreviewTableProps> = ({rows, parentRef}) => 
                   bottom: "auto",
                   position: "absolute",
                   height: 15,
-                  background: "#eee",
+                  background: "pink",
                 }}
               />
             );
@@ -95,11 +95,19 @@ const TableContainer = styled.div`
   min-width: 100%;
   position: relative;
   overflow: hidden;
+  background: rgb(121, 176, 106);
+  border-radius: 15px;
 `;
 
 const RowContainer = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  min-width: 100%;
+  transition: background 0.3s;
+  border-radius: 10px;
+
+  &:hover {
+    background: limegreen;
+  }
 `;

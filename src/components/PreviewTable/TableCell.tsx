@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import {css} from "@emotion/react";
 import {flexRender} from "@tanstack/react-table";
-import {ROW_HEIGHT} from "../CsvPreview";
 import DeleteIcon from "../../assets/icons/trash-can.png";
 import {useState, useRef} from "react";
 import {useOnClickOutside} from "usehooks-ts";
@@ -63,15 +62,16 @@ export const TableCell: React.FC<TableCellProps> = ({cell, row}) => {
       key={cell.id}
       css={css`
         font-weight: ${row.index === 0 ? "bold" : "normal"};
-        height: ${ROW_HEIGHT}px;
+        text-decoration: ${row.index === 0 ? "underline" : "none"};
+        height: ${CELL_HEIGHT}px;
         border: 2px solid ${getCellBorderColor(validateCellResult, newText)};
+        cursor: ${!validateCellResult ? "pointer" : ""};
 
         ${getFlexAndWidth(cellSize)};
       `}
       onClick={() => {
         if (!validateCellResult) {
           setCurrentDisplay("input");
-          console.log("%c ???", "background: pink; color: black");
         }
       }}
       ref={cellContainerRef}
@@ -114,6 +114,8 @@ export const TableCell: React.FC<TableCellProps> = ({cell, row}) => {
   );
 };
 
+const CELL_HEIGHT = 50;
+
 const CellContainer = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
@@ -123,6 +125,8 @@ const CellContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 5px;
+  border-radius: 10px;
+  box-sizing: border-box;
 `;
 
 const StyledInput = styled.input`
@@ -145,5 +149,5 @@ const DeleteColumnButton = styled.button`
 const getCellBorderColor = (validateCellResult: boolean, newText: undefined | string) => {
   if (validateCellResult && !newText) return "transparent";
   if (validateCellResult && newText) return "limegreen";
-  if (!validateCellResult) return "red";
+  if (!validateCellResult) return "#ba2525";
 };

@@ -73,4 +73,4 @@ const TableContainer = styled.div`
   margin-bottom: 50px;
 `;
 
-export const ROW_HEIGHT = 50;
+export const ROW_HEIGHT = 60;

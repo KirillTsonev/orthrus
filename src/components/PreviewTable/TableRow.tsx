@@ -36,11 +36,15 @@ export const TableRow: React.FC<TableRowProps> = ({row}) => {
         if (cellSize === 0) return null;
 
         return (
-          <TableCell
-            row={row}
-            cell={cell}
+          <div
+            style={{padding: "5px"}}
             key={cell.id}
-          />
+          >
+            <TableCell
+              row={row}
+              cell={cell}
+            />
+          </div>
         );
       })}
     </TableRowContainer>
